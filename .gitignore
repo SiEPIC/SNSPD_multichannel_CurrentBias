@@ -1,0 +1,4 @@
+Firmware/.cache/*
+Firmware/.clangd
+Firmware/.DS_Store
+Firmware/sdkconfig

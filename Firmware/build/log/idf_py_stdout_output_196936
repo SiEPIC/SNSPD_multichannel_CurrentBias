@@ -1,0 +1,19 @@
+Command: ninja all
+[1/10] Performing build step for 'bootloader'
+[1/1] cd /home/ta1/voltage-source/build/bootloader/esp-idf/esptool_py && /nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python /nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 /home/ta1/voltage-source/build/bootloader/bootloader.bin
+Bootloader binary size 0x66c0 bytes. 0x940 bytes (8%) free.
+[2/10] No install step for 'bootloader'
+[3/10] Building CXX object esp-idf/app/CMakeFiles/__idf_app.dir/task_comms.cpp.obj
+[4/10] Completed 'bootloader'
+[5/10] Building CXX object esp-idf/app/CMakeFiles/__idf_app.dir/channel.cpp.obj
+[6/10] Linking C static library esp-idf/app/libapp.a
+[7/10] Generating esp-idf/esp_system/ld/sections.ld
+[8/10] Linking CXX executable multi_channel_voltage_source_fw.elf
+[9/10] Generating binary image from built executable
+esptool.py v4.9.0
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Generated /home/ta1/voltage-source/build/multi_channel_voltage_source_fw.bin
+[10/10] cd /home/ta1/voltage-source/build/esp-idf/esptool_py && /nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python /nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/ta1/voltage-source/build/partition_table/partition-table.bin /home/ta1/voltage-source/build/multi_channel_voltage_source_fw.bin
+multi_channel_voltage_source_fw.bin binary size 0x3b8d0 bytes. Smallest app partition is 0x100000 bytes. 0xc4730 bytes (77%) free.

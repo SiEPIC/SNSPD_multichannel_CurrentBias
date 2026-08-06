@@ -1,0 +1,2 @@
+source /home/ta1/voltage-source/build/bootloader/gdbinit/symbols
+source /home/ta1/voltage-source/build/bootloader/gdbinit/connect

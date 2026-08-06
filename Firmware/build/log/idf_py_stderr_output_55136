@@ -1,0 +1,1 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=/nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python -DESP_PLATFORM=1 -DIDF_TARGET=esp32 -DCCACHE_ENABLE=0 /home/ta1/voltage-source

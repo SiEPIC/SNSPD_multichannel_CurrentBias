@@ -1,0 +1,27 @@
+Command: /nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python /nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/ta1/voltage-source/build/multi_channel_voltage_source_fw.elf /home/ta1/voltage-source/build/bootloader/bootloader.elf -m '/nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python' '/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/tools/idf.py'
+[0;33m--- esp-idf-monitor 1.7.0 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
+[0m--- 0x40080644: [0;33mcall_start_cpu0[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
+[0m--- 0x400d490b: [0;33muart_ll_get_txfifo_len[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/esp32/include/hal/uart_ll.h[0m[0m:[1;31m439[0m
+[0m--- (inlined by) [0;33muart_tx_char[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart/src/uart_vfs.c[0m[0m:[1;31m190[0m
+[0m--- 0x400d5018: [0;33muart_write[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart/src/uart_vfs.c[0m[0m:[1;31m245[0m
+[0m--- 0x400d5f72: [0;33mesp_vfs_write[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs/vfs.c[0m[0m:[1;31m982[0m
+[0m--- 0x4000bd83: [0;33m_write_r[0m[0m in [0;32mROM[0m
+[0m--- 0x4000182a: [0;33mwrite[0m[0m in [0;32mROM[0m
+[0m--- 0x400d5995: [0;33mconsole_write[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_vfs_console/vfs_console.c[0m[0m:[1;31m83[0m
+[0m--- 0x400d5f72: [0;33mesp_vfs_write[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs/vfs.c[0m[0m:[1;31m982[0m
+[0m--- 0x4000bd83: [0;33m_write_r[0m[0m in [0;32mROM[0m
+[0m--- 0x4000117d: [0;33m__swrite[0m[0m in [0;32mROM[0m
+[0m--- 0x400592fe: [0;33m__sflush_r[0m[0m in [0;32mROM[0m
+[0m--- 0x4005937a: [0;33m_fflush_r[0m[0m in [0;32mROM[0m
+[0m--- 0x400e1cb1: [0;33m__sfvwrite_r[0m[0m at [0;32m/builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/newlib/newlib/libc/stdio/fvwrite.c[0m[0m:[1;31m251[0m
+[0m--- 0x400e940b: [0;33m__sprint_r[0m[0m at [0;32m/builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/newlib/newlib/libc/stdio/vfprintf.c[0m[0m:[1;31m429[0m
+[0m--- (inlined by) [0;33m__sprint_r[0m[0m at [0;32m/builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/newlib/newlib/libc/stdio/vfprintf.c[0m[0m:[1;31m399[0m
+[0m--- 0x400e9302: [0;33m_vfprintf_r[0m[0m at [0;32m/builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/newlib/newlib/libc/stdio/vfprintf.c[0m[0m:[1;31m1774[0m
+[0m--- 0x400e1d07: [0;33mprintf[0m[0m at [0;32m/builds/idf/crosstool-NG/.build/xtensa-esp-elf/src/newlib/newlib/libc/stdio/printf.c[0m[0m:[1;31m56[0m
+[0m--- 0x400d6d31: [0;33mlog_task(void*)[0m[0m at [0;32m/home/ta1/voltage-source/components/app/task_comms.cpp[0m[0m:[1;31m121[0m
+[0m--- 0x400873c9: [0;33mvPortTaskWrapper[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m139[0m
+[0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
+[0m--- 0x40080644: [0;33mcall_start_cpu0[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
+[0m
