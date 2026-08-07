@@ -5,7 +5,7 @@ Multichannel current source for SNSPD biasing
 
 # GUI Launch:
 
-install uv python environment: https://docs.astral.sh/uv/getting-started/installation 
+Install uv python package and project manager: https://docs.astral.sh/uv/getting-started/installation 
 
 ## MacOS and Linux:
 
