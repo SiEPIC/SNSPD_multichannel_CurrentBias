@@ -50,8 +50,9 @@ nix develop
 ```
 
 
-# Firmware Flashing (Requires Nix installation for now):
-
+# Firmware Flashing :
+**(Requires Nix installation for now)** \
+\
 **MacOS/ Linux:**
 
 ```bash
