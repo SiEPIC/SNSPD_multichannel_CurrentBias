@@ -9,15 +9,20 @@ install uv python environment: https://docs.astral.sh/uv/getting-started/install
 
 ## MacOS and Linux:
 
-MacOS: 
+**MacOS:**
+
 ```bash
 brew install libusb
 ```
-Linux:
+
+**Linux:**
+
 ```bash
 sudo apt install libusb-1.0-0  
 ```
-(use distro specific package manager)
+
+(Use distro specific package manager)
+
 
 ```bash
 cd GUI/ 
@@ -28,17 +33,21 @@ uv pip install -r requirements.txt
 
 ## Windows:
 
-uv venv --python 3.10 \
-source .venv\Scripts\activate \
+```bash
+uv venv --python 3.10 
+source .venv\Scripts\activate
 uv pip install -r requirements.txt 
+```
 
 ## Nix flake (For Linux or MacOS):
 
 Nix installation guide: https://nix.dev/install-nix.html \
-No need to install uv or libusb 
+No need to separately install uv or libusb
 
-cd GUI/ \
+```bash
+cd GUI/ 
 nix develop 
+```
 
 
 # Firmware Flashing:
