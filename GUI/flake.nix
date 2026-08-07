@@ -35,6 +35,7 @@
             fi
 
             source .venv/bin/activate
+            uv pip install -q -r requirements.txt
             echo "Python: $(python --version)"
           '';
         };

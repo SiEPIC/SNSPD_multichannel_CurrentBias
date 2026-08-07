@@ -182,9 +182,8 @@ class VoltageSourceController:
         self._serial = None
         print("[VoltageSource] Disconnected")
 
-        """
-        Spawn the background thread that keeps the firmware USB cable-watchdog
-        """
+    def _start_heartbeat(self):
+        """Spawn the background thread that keeps the firmware USB cable-watchdog fed."""
         self._stop_heartbeat()
         stop = threading.Event()
         self._heartbeat_stop = stop

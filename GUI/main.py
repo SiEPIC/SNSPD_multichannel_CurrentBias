@@ -18,7 +18,7 @@ if _PROJECT_ROOT not in sys.path:
 
 from remi import App, start
 import remi.gui as gui
-from GUI.lib_gui import (
+from layout.lib_gui import (
     StyledContainer,
     StyledButton,
     StyledLabel,
@@ -26,9 +26,9 @@ from GUI.lib_gui import (
     StyledTextInput,
     StyledCheckBox,
 )
-from GUI.window_config import get_window_config
-from VoltageSource.vs_controller import VoltageSourceController
-from VoltageSource.scpi_meter_controller import ScpiMeterController
+from layout.window_config import get_window_config
+from controller.vs_controller import VoltageSourceController
+from controller.scpi_meter_controller import ScpiMeterController
 
 import logging
 logging.getLogger("remi.server").setLevel(logging.ERROR)
@@ -131,7 +131,7 @@ class VoltageSourceApp(App):
         self._meter_status_label = None
         self._meter_connect_btn = None
         self._meter_was_connected = False
-        self._meter_connecting = False  # in-flight connect worker
+        self._meter_connecting = False  
 
         # Per-channel meter compare widgets/state
         self._meter_compare_cbs: list = [None] * 4
