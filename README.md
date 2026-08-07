@@ -52,3 +52,15 @@ nix develop
 
 # Firmware Flashing:
 
+**MacOS/ Linux:**
+
+```bash
+
+cd Firmware/
+nix develop
+
+esp32
+b
+f
+
+```
