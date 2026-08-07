@@ -9,13 +9,22 @@ install uv python environment: https://docs.astral.sh/uv/getting-started/install
 
 ## MacOS and Linux:
 
-MacOS: brew install libusb \
-Linux: sudo apt install libusb-1.0-0 (use distro specific package manager) 
+MacOS: 
+'''bash
+brew install libusb
+'''
+Linux:
+'''bash
+sudo apt install libusb-1.0-0  
+'''
+(use distro specific package manager)
 
-cd GUI/ \
-uv venv --python 3.10 \
-source .venv/bin/activate \
+'''bash
+cd GUI/ 
+uv venv --python 3.10 
+source .venv/bin/activate 
 uv pip install -r requirements.txt 
+'''
 
 ## Windows:
 
@@ -30,4 +39,7 @@ No need to install uv or libusb
 
 cd GUI/ \
 nix develop 
+
+
+# Firmware Flashing:
 
