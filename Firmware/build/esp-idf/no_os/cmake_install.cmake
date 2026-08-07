@@ -1,4 +1,4 @@
-# Install script for directory: /home/ta1/voltage-source/components/no_os
+# Install script for directory: /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,6 +40,6 @@ endif()
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/ta1/voltage-source/build/esp-idf/no_os/install_local_manifest.txt"
+  file(WRITE "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/no_os/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

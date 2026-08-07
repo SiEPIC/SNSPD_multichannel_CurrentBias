@@ -10,18 +10,18 @@ if(NOT EXISTS "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/compon
   file(MAKE_DIRECTORY "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "/home/ta1/voltage-source/build/bootloader"
-  "/home/ta1/voltage-source/build/bootloader-prefix"
-  "/home/ta1/voltage-source/build/bootloader-prefix/tmp"
-  "/home/ta1/voltage-source/build/bootloader-prefix/src/bootloader-stamp"
-  "/home/ta1/voltage-source/build/bootloader-prefix/src"
-  "/home/ta1/voltage-source/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader"
+  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix"
+  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/tmp"
+  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp"
+  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src"
+  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/ta1/voltage-source/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "/home/ta1/voltage-source/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

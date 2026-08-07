@@ -1,8 +1,0 @@
-Command: /nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python /nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/ta1/voltage-source/build/multi_channel_voltage_source_fw.elf /home/ta1/voltage-source/build/bootloader/bootloader.elf -m '/nix/store/yxn8caq88x7ncmsbvqn51wk7pwqmvivc-python3-3.13.9-env/bin/python' '/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/tools/idf.py'
-[0;33m--- esp-idf-monitor 1.7.0 on /dev/ttyUSB0 115200[0m
-[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
-[0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
-[0m--- 0x40080644: [0;33mcall_start_cpu0[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
-[0m--- 0x40080400: [0;33m_invalid_pc_placeholder[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2235[0m
-[0m--- 0x40080644: [0;33mcall_start_cpu0[0m[0m at [0;32m/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m25[0m
-[0m

@@ -1,13 +1,13 @@
 {
     "version":            "1.2",
     "project_name":       "multi_channel_voltage_source_fw",
-    "project_version":    "990a517-dirty",
-    "project_path":       "/home/ta1/voltage-source",
+    "project_version":    "dc3e8f9-dirty",
+    "project_path":       "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware",
     "idf_path":           "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2",
-    "build_dir":          "/home/ta1/voltage-source/build",
-    "config_file":        "/home/ta1/voltage-source/sdkconfig",
-    "config_defaults":    "/home/ta1/voltage-source/sdkconfig.defaults",
-    "bootloader_elf":     "/home/ta1/voltage-source/build/bootloader/bootloader.elf",
+    "build_dir":          "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build",
+    "config_file":        "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/sdkconfig",
+    "config_defaults":    "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/sdkconfig.defaults",
+    "bootloader_elf":     "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader/bootloader.elf",
     "app_elf":            "multi_channel_voltage_source_fw.elf",
     "app_bin":            "multi_channel_voltage_source_fw.bin",
     "build_type":         "flash_app",
@@ -26,36 +26,36 @@
     },
     "common_component_reqs": [ "cxx", "newlib", "freertos", "esp_hw_support", "heap", "log", "soc", "hal", "esp_rom", "esp_common", "esp_system", "xtensa" ],
     "build_components" : [ "adc", "app", "app_trace", "app_update", "bootloader", "bootloader_support", "bt", "cmock", "console", "cxx", "dac", "driver", "efuse", "esp-tls", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_coex", "esp_common", "esp_driver_ana_cmpr", "esp_driver_bitscrambler", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_isp", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_ppa", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_touch_sens", "esp_driver_tsens", "esp_driver_twai", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_eth", "esp_event", "esp_gdbstub", "esp_hid", "esp_http_client", "esp_http_server", "esp_https_ota", "esp_https_server", "esp_hw_support", "esp_lcd", "esp_local_ctrl", "esp_mm", "esp_netif", "esp_netif_stack", "esp_partition", "esp_phy", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_security", "esp_system", "esp_timer", "esp_vfs_console", "esp_wifi", "espcoredump", "esptool_py", "fatfs", "freertos", "hal", "heap", "http_parser", "idf_test", "ieee802154", "json", "log", "lwip", "main", "mbedtls", "mqtt", "newlib", "no_os", "nvs_flash", "nvs_sec_provider", "openthread", "partition_table", "perfmon", "platform", "protobuf-c", "protocomm", "pthread", "rt", "sdmmc", "soc", "spi_flash", "spiffs", "tcp_transport", "ulp", "unity", "usb", "vfs", "wear_levelling", "wifi_provisioning", "wpa_supplicant", "xtensa", "" ],
-    "build_component_paths" : [ "/home/ta1/voltage-source/components/drivers/adc", "/home/ta1/voltage-source/components/app", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_trace", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_update", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cmock", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cxx", "/home/ta1/voltage-source/components/drivers/dac", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_app_format", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_bootloader_format", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_coex", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_common", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ana_cmpr", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_bitscrambler", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_cam", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gpio", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gptimer", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2s", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_isp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_jpeg", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ledc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_parlio", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_pcnt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ppa", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdio", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdmmc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdspi", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_spi", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_touch_sens", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_tsens", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_twai", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_usb_serial_jtag", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_event", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hid", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_client", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_https_ota", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_https_server", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_local_ctrl", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif_stack", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_partition", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_pm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_psram", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_ringbuf", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_security", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_vfs_console", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esptool_py", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/http_parser", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/idf_test", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/ieee802154", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/json", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip", "/home/ta1/voltage-source/main", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mbedtls", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib", "/home/ta1/voltage-source/components/no_os", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_sec_provider", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/openthread", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/partition_table", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/perfmon", "/home/ta1/voltage-source/components/platform", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protobuf-c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/rt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/ulp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/usb", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa", "" ],
+    "build_component_paths" : [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/adc", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/app", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_trace", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_update", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cmock", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cxx", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/dac", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_app_format", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_bootloader_format", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_coex", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_common", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ana_cmpr", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_bitscrambler", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_cam", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gpio", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gptimer", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2s", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_isp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_jpeg", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ledc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_parlio", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_pcnt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ppa", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdio", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdmmc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdspi", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_spi", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_touch_sens", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_tsens", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_twai", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_usb_serial_jtag", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_event", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hid", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_client", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_https_ota", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_https_server", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_local_ctrl", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif_stack", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_partition", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_pm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_psram", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_ringbuf", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_security", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_vfs_console", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esptool_py", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/http_parser", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/idf_test", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/ieee802154", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/json", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/main", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mbedtls", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_sec_provider", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/openthread", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/partition_table", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/perfmon", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/platform", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protobuf-c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/rt", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/ulp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/usb", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa", "" ],
     "build_component_info" : {
         "adc": {
             "alias": "idf::adc",
             "target": "___idf_adc",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/drivers/adc",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/adc",
             "type": "LIBRARY",
             "lib": "__idf_adc",
             "reqs": [ "no_os", "platform" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/adc/libadc.a",
-            "sources": [ "/home/ta1/voltage-source/components/drivers/adc/ad717x.c" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/adc/libadc.a",
+            "sources": [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/adc/ad717x.c" ],
             "include_dirs": [ "include" ]
         },
         "app": {
             "alias": "idf::app",
             "target": "___idf_app",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/app",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/app",
             "type": "LIBRARY",
             "lib": "__idf_app",
             "reqs": [ "nvs_flash", "adc", "dac", "platform", "no_os" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/app/libapp.a",
-            "sources": [ "/home/ta1/voltage-source/components/app/task_comms.cpp", "/home/ta1/voltage-source/components/app/coordinator.cpp", "/home/ta1/voltage-source/components/app/channel.cpp" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/app/libapp.a",
+            "sources": [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/app/task_comms.cpp", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/app/coordinator.cpp", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/app/channel.cpp" ],
             "include_dirs": [ "include" ]
         },
         "app_trace": {
@@ -69,7 +69,7 @@
             "priv_reqs": [ "esp_driver_gptimer", "esp_driver_gpio", "esp_driver_uart" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/app_trace/libapp_trace.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/app_trace/libapp_trace.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_trace/app_trace.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_trace/app_trace_util.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_trace/host_file_io.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_trace/port/port_uart.c" ],
             "include_dirs": [ "include" ]
         },
@@ -84,7 +84,7 @@
             "priv_reqs": [ "esptool_py", "efuse", "spi_flash" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/app_update/libapp_update.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/app_update/libapp_update.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_update/esp_ota_ops.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/app_update/esp_ota_app_desc.c" ],
             "include_dirs": [ "include" ]
         },
@@ -114,7 +114,7 @@
             "priv_reqs": [ "spi_flash", "mbedtls", "efuse", "heap", "esp_bootloader_format", "esp_app_format" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/bootloader_support/libbootloader_support.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/bootloader_support/libbootloader_support.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_common_loader.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_clock_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_mem.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_random.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_efuse.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/flash_encrypt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/secure_boot.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_random_esp32.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/bootloader_flash/src/bootloader_flash.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/bootloader_flash/src/flash_qio_mode.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/bootloader_flash/src/bootloader_flash_config_esp32.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_utility.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/flash_partitions.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/esp_image_format.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/bootloader_sha.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader_support/src/esp32/secure_boot_secure_features.c" ],
             "include_dirs": [ "include", "bootloader_flash/include" ]
         },
@@ -144,7 +144,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/cmock/libcmock.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/cmock/libcmock.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cmock/CMock/src/cmock.c" ],
             "include_dirs": [ "CMock/src" ]
         },
@@ -159,7 +159,7 @@
             "priv_reqs": [ "esp_driver_uart", "esp_driver_usb_serial_jtag" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/console/libconsole.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/console/libconsole.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/commands.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/esp_console_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/esp_console_repl_internal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/split_argv.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/linenoise/linenoise.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/esp_console_repl_chip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_cmd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_date.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_dbl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_dstr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_end.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_file.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_hashtable.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_int.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_lit.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_rem.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_rex.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_str.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/arg_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console/argtable3/argtable3.c" ],
             "include_dirs": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/console" ]
         },
@@ -174,7 +174,7 @@
             "priv_reqs": [ "esp_system", "pthread" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/cxx/libcxx.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/cxx/libcxx.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cxx/cxx_exception_stubs.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cxx/cxx_guards.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/cxx/cxx_init.cpp" ],
             "include_dirs": []
         },
@@ -182,15 +182,15 @@
             "alias": "idf::dac",
             "target": "___idf_dac",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/drivers/dac",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/dac",
             "type": "LIBRARY",
             "lib": "__idf_dac",
             "reqs": [ "no_os" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/dac/libdac.a",
-            "sources": [ "/home/ta1/voltage-source/components/drivers/dac/ad5761r.c" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/dac/libdac.a",
+            "sources": [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/dac/ad5761r.c" ],
             "include_dirs": [ "include" ]
         },
         "driver": {
@@ -204,7 +204,7 @@
             "priv_reqs": [ "efuse", "esp_timer", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/driver/libdriver.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/driver/libdriver.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/adc_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/adc_dma_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/dac_common_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/esp32/dac_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/timer_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/i2c/i2c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/i2s_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/mcpwm_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/pcnt_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/rmt_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/sigma_delta_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/touch_sensor/touch_sensor_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/touch_sensor/esp32/touch_sensor.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/twai/twai.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/driver/deprecated/adc_i2s_deprecated.c" ],
             "include_dirs": [ "deprecated", "i2c/include", "touch_sensor/include", "twai/include", "touch_sensor/esp32/include" ]
         },
@@ -219,7 +219,7 @@
             "priv_reqs": [ "bootloader_support", "soc", "spi_flash", "esp_system", "esp_partition", "esp_app_format" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/efuse/libefuse.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/efuse/libefuse.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/esp32/esp_efuse_table.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/esp32/esp_efuse_fields.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/esp32/esp_efuse_utility.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/src/esp_efuse_api.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/src/esp_efuse_fields.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/src/esp_efuse_utility.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/src/efuse_controller/keys/without_key_purposes/three_key_blocks/esp_efuse_api_key.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/efuse/src/esp_efuse_startup.c" ],
             "include_dirs": [ "include", "esp32/include" ]
         },
@@ -234,7 +234,7 @@
             "priv_reqs": [ "http_parser", "esp_timer", "lwip" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp-tls/libesp-tls.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp-tls/libesp-tls.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls/esp_tls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls/esp-tls-crypto/esp_tls_crypto.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls/esp_tls_error_capture.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls/esp_tls_platform_port.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls/esp_tls_mbedtls.c" ],
             "include_dirs": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp-tls", "esp-tls-crypto" ]
         },
@@ -249,7 +249,7 @@
             "priv_reqs": [ "esp_driver_gpio", "efuse", "esp_pm", "esp_ringbuf", "esp_mm", "esp_driver_i2s", "driver" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_adc/libesp_adc.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_adc/libesp_adc.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/adc_oneshot.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/adc_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/adc_cali.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/adc_cali_curve_fitting.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/deprecated/esp_adc_cal_common_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/adc_continuous.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/esp32/adc_dma.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/esp32/adc_cali_line_fitting.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_adc/deprecated/esp32/esp_adc_cal_legacy.c" ],
             "include_dirs": [ "include", "interface", "esp32/include", "deprecated/include" ]
         },
@@ -264,7 +264,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_app_format/libesp_app_format.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_app_format/libesp_app_format.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_app_format/esp_app_desc.c" ],
             "include_dirs": [ "include" ]
         },
@@ -279,7 +279,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_bootloader_format/libesp_bootloader_format.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_bootloader_format/libesp_bootloader_format.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_bootloader_format/esp_bootloader_desc.c" ],
             "include_dirs": [ "include" ]
         },
@@ -294,7 +294,7 @@
             "priv_reqs": [ "esp_timer", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_coex/libesp_coex.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_coex/libesp_coex.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_coex/esp32/esp_coex_adapter.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_coex/src/coexist_debug_diagram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_coex/src/coexist_debug.c" ],
             "include_dirs": [ "include" ]
         },
@@ -309,7 +309,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_common/libesp_common.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_common/libesp_common.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_common/src/esp_err_to_name.c" ],
             "include_dirs": [ "include" ]
         },
@@ -354,7 +354,7 @@
             "priv_reqs": [ "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_cam/libesp_driver_cam.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_cam/libesp_driver_cam.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_cam/esp_cam_ctlr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_cam/dvp_share_ctrl.c" ],
             "include_dirs": [ "include", "interface" ]
         },
@@ -369,7 +369,7 @@
             "priv_reqs": [ "esp_pm", "esp_driver_gpio", "esp_driver_i2s" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_dac/libesp_driver_dac.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_dac/libesp_driver_dac.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac/dac_oneshot.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac/dac_cosine.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac/dac_continuous.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac/dac_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_dac/esp32/dac_dma.c" ],
             "include_dirs": [ "./include" ]
         },
@@ -384,7 +384,7 @@
             "priv_reqs": [ "esp_pm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_gpio/libesp_driver_gpio.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_gpio/libesp_driver_gpio.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gpio/src/gpio.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gpio/src/gpio_glitch_filter_ops.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gpio/src/rtc_io.c" ],
             "include_dirs": [ "include" ]
         },
@@ -399,7 +399,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_gptimer/libesp_driver_gptimer.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_gptimer/libesp_driver_gptimer.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gptimer/src/gptimer.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gptimer/src/gptimer_common.c" ],
             "include_dirs": [ "include" ]
         },
@@ -414,7 +414,7 @@
             "priv_reqs": [ "esp_driver_gpio", "esp_pm", "esp_ringbuf" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_i2c/libesp_driver_i2c.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_i2c/libesp_driver_i2c.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2c/i2c_master.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2c/i2c_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2c/i2c_slave.c" ],
             "include_dirs": [ "include" ]
         },
@@ -429,7 +429,7 @@
             "priv_reqs": [ "esp_driver_gpio", "esp_pm", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_i2s/libesp_driver_i2s.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_i2s/libesp_driver_i2s.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2s/i2s_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2s/i2s_std.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2s/i2s_pdm.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_i2s/i2s_platform.c" ],
             "include_dirs": [ "include" ]
         },
@@ -474,7 +474,7 @@
             "priv_reqs": [ "esp_pm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_ledc/libesp_driver_ledc.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_ledc/libesp_driver_ledc.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_ledc/src/ledc.c" ],
             "include_dirs": [ "include" ]
         },
@@ -489,7 +489,7 @@
             "priv_reqs": [ "esp_pm", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_mcpwm/libesp_driver_mcpwm.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_mcpwm/libesp_driver_mcpwm.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_cap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_cmpr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_com.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_fault.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_gen.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_oper.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_sync.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_mcpwm/src/mcpwm_timer.c" ],
             "include_dirs": [ "include" ]
         },
@@ -519,7 +519,7 @@
             "priv_reqs": [ "esp_pm", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_pcnt/libesp_driver_pcnt.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_pcnt/libesp_driver_pcnt.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_pcnt/src/pulse_cnt.c" ],
             "include_dirs": [ "include" ]
         },
@@ -549,7 +549,7 @@
             "priv_reqs": [ "esp_pm", "esp_driver_gpio", "esp_driver_bitscrambler", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_rmt/libesp_driver_rmt.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_rmt/libesp_driver_rmt.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_encoder.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_encoder_bytes.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_encoder_copy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_encoder_simple.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_rx.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_rmt/src/rmt_tx.c" ],
             "include_dirs": [ "include" ]
         },
@@ -564,7 +564,7 @@
             "priv_reqs": [ "esp_driver_gpio", "esp_ringbuf" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_sdio/libesp_driver_sdio.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_sdio/libesp_driver_sdio.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdio/src/sdio_slave.c" ],
             "include_dirs": [ "include" ]
         },
@@ -579,7 +579,7 @@
             "priv_reqs": [ "esp_pm", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_sdm/libesp_driver_sdm.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_sdm/libesp_driver_sdm.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdm/src/sdm.c" ],
             "include_dirs": [ "include" ]
         },
@@ -594,7 +594,7 @@
             "priv_reqs": [ "esp_timer", "esp_pm", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_sdmmc/libesp_driver_sdmmc.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_sdmmc/libesp_driver_sdmmc.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdmmc/src/sdmmc_transaction.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdmmc/src/sdmmc_host.c" ],
             "include_dirs": [ "include" ]
         },
@@ -609,7 +609,7 @@
             "priv_reqs": [ "esp_timer", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_sdspi/libesp_driver_sdspi.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_sdspi/libesp_driver_sdspi.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdspi/src/sdspi_crc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdspi/src/sdspi_host.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_sdspi/src/sdspi_transaction.c" ],
             "include_dirs": [ "include" ]
         },
@@ -624,7 +624,7 @@
             "priv_reqs": [ "esp_timer", "esp_mm", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_spi/libesp_driver_spi.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_spi/libesp_driver_spi.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_spi/src/gpspi/spi_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_spi/src/gpspi/spi_master.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_spi/src/gpspi/spi_slave.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_spi/src/gpspi/spi_dma.c" ],
             "include_dirs": [ "include" ]
         },
@@ -639,7 +639,7 @@
             "priv_reqs": [ "esp_driver_gpio", "esp_timer" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_touch_sens/libesp_driver_touch_sens.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_touch_sens/libesp_driver_touch_sens.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_touch_sens/common/touch_sens_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_touch_sens/hw_ver1/touch_version_specific.c" ],
             "include_dirs": [ "include", "hw_ver1/include" ]
         },
@@ -669,7 +669,7 @@
             "priv_reqs": [ "esp_driver_gpio", "esp_pm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_twai/libesp_driver_twai.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_twai/libesp_driver_twai.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_twai/esp_twai.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_twai/esp_twai_onchip.c" ],
             "include_dirs": [ "include" ]
         },
@@ -684,7 +684,7 @@
             "priv_reqs": [ "esp_pm", "esp_driver_gpio", "esp_ringbuf", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_driver_uart/libesp_driver_uart.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_uart/libesp_driver_uart.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart/src/uart.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart/src/uart_wakeup.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_uart/src/uart_vfs.c" ],
             "include_dirs": [ "include" ]
         },
@@ -714,7 +714,7 @@
             "priv_reqs": [ "log", "esp_timer", "esp_driver_spi", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_eth/libesp_eth.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_eth/libesp_eth.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/esp_eth.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_802_3.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/esp_eth_netif_glue.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/mac/esp_eth_mac_esp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/mac/esp_eth_mac_esp_dma.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/mac/esp_eth_mac_esp_gpio.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_generic.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_dp83848.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_ip101.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_ksz80xx.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_lan87xx.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_eth/src/phy/esp_eth_phy_rtl8201.c" ],
             "include_dirs": [ "include" ]
         },
@@ -729,7 +729,7 @@
             "priv_reqs": [ "esp_timer" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_event/libesp_event.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_event/libesp_event.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_event/default_event_loop.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_event/esp_event.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_event/esp_event_private.c" ],
             "include_dirs": [ "include" ]
         },
@@ -744,7 +744,7 @@
             "priv_reqs": [ "soc", "esp_rom", "esp_system" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_gdbstub/libesp_gdbstub.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_gdbstub/libesp_gdbstub.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub/src/gdbstub.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub/src/gdbstub_transport.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub/src/packet.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub/src/port/xtensa/gdbstub_xtensa.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub/src/port/xtensa/gdbstub-entry.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_gdbstub/src/port/xtensa/xt_debugexception.S" ],
             "include_dirs": [ "include" ]
         },
@@ -759,7 +759,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_hid/libesp_hid.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_hid/libesp_hid.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hid/src/esp_hidd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hid/src/esp_hidh.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hid/src/esp_hid_common.c" ],
             "include_dirs": [ "include" ]
         },
@@ -774,7 +774,7 @@
             "priv_reqs": [ "tcp_transport", "http_parser" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_http_client/libesp_http_client.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_http_client/libesp_http_client.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_client/esp_http_client.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_client/lib/http_auth.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_client/lib/http_header.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_client/lib/http_utils.c" ],
             "include_dirs": [ "include" ]
         },
@@ -789,7 +789,7 @@
             "priv_reqs": [ "mbedtls", "lwip", "esp_timer" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_http_server/libesp_http_server.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_http_server/libesp_http_server.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/httpd_main.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/httpd_parse.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/httpd_sess.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/httpd_txrx.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/httpd_uri.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/httpd_ws.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_http_server/src/util/ctrl_sock.c" ],
             "include_dirs": [ "include" ]
         },
@@ -804,7 +804,7 @@
             "priv_reqs": [ "log", "app_update" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_https_ota/libesp_https_ota.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_https_ota/libesp_https_ota.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_https_ota/src/esp_https_ota.c" ],
             "include_dirs": [ "include" ]
         },
@@ -819,7 +819,7 @@
             "priv_reqs": [ "lwip" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_https_server/libesp_https_server.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_https_server/libesp_https_server.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_https_server/src/https_server.c" ],
             "include_dirs": [ "include" ]
         },
@@ -834,7 +834,7 @@
             "priv_reqs": [ "efuse", "spi_flash", "bootloader_support", "esp_security", "esp_driver_gpio", "esp_timer", "esp_pm", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_hw_support/libesp_hw_support.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_hw_support/libesp_hw_support.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/cpu.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/esp_cpu_intr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/esp_memory_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/cpu_region_protect.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/esp_clk.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/clk_ctrl_os.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/hw_random.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/intr_alloc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/mac_addr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/periph_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/revision.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/rtc_module.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/regi2c_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/esp_gpio_reserve.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sar_periph_ctrl_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/io_mux.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/esp_clk_tree.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/dma/esp_dma_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/dma/gdma_link.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/spi_bus_lock.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/clk_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp_clk_tree_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/spi_share_hw_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/adc_share_hw_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_modem.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_modes.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_console.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_mspi.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_usb.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_gpio.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_event.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/rtc_wdt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/mspi_timing_tuning/mspi_timing_tuning.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/sleep_wake_stub.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/esp_clock_output.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/power_supply/brownout.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/rtc_clk.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/rtc_clk_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/rtc_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/rtc_sleep.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/rtc_time.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/chip_info.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/cache_sram_mmu.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/port/esp32/sar_periph_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_hw_support/lowpower" ],
             "include_dirs": [ "include", "include/soc", "include/soc/esp32", "dma/include", "ldo/include", "debug_probe/include", "mspi_timing_tuning/include", "mspi_timing_tuning/tuning_scheme_impl/include", "power_supply/include" ]
         },
@@ -849,7 +849,7 @@
             "priv_reqs": [ "esp_mm", "esp_psram", "esp_pm", "esp_driver_i2s" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_lcd/libesp_lcd.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_lcd/libesp_lcd.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/src/esp_lcd_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/src/esp_lcd_panel_io.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/src/esp_lcd_panel_nt35510.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/src/esp_lcd_panel_ssd1306.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/src/esp_lcd_panel_st7789.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/src/esp_lcd_panel_ops.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/i2c/esp_lcd_panel_io_i2c_v1.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/i2c/esp_lcd_panel_io_i2c_v2.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/spi/esp_lcd_panel_io_spi.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_lcd/i80/esp_lcd_panel_io_i2s.c" ],
             "include_dirs": [ "include", "interface" ]
         },
@@ -864,7 +864,7 @@
             "priv_reqs": [ "protobuf-c", "esp_netif" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_local_ctrl/libesp_local_ctrl.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_local_ctrl/libesp_local_ctrl.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_local_ctrl/src/esp_local_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_local_ctrl/src/esp_local_ctrl_handler.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_local_ctrl/proto-c/esp_local_ctrl.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_local_ctrl/src/esp_local_ctrl_transport_httpd.c" ],
             "include_dirs": [ "include" ]
         },
@@ -879,7 +879,7 @@
             "priv_reqs": [ "heap", "spi_flash" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_mm/libesp_mm.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_mm/libesp_mm.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm/esp_mmu_map.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm/port/esp32/ext_mem_layout.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm/esp_cache_msync.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm/esp_cache_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm/cache_esp32.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_mm/heap_align_hw.c" ],
             "include_dirs": [ "include" ]
         },
@@ -894,7 +894,7 @@
             "priv_reqs": [ "esp_netif_stack" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_netif/libesp_netif.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_netif/libesp_netif.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/esp_netif_handlers.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/esp_netif_objects.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/esp_netif_defaults.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/lwip/esp_netif_lwip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/lwip/esp_netif_sntp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/lwip/esp_netif_lwip_defaults.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/lwip/netif/wlanif.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/lwip/netif/ethernetif.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_netif/lwip/netif/esp_pbuf_ref.c" ],
             "include_dirs": [ "include" ]
         },
@@ -924,7 +924,7 @@
             "priv_reqs": [ "esp_system", "spi_flash", "partition_table", "bootloader_support", "app_update" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_partition/libesp_partition.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_partition/libesp_partition.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_partition/partition.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_partition/partition_target.c" ],
             "include_dirs": [ "include" ]
         },
@@ -939,7 +939,7 @@
             "priv_reqs": [ "nvs_flash", "esp_driver_gpio", "efuse", "esp_timer", "esp_wifi" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_phy/libesp_phy.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_phy/libesp_phy.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy/src/phy_override.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy/src/lib_printf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy/src/phy_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy/src/phy_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy/esp32/phy_init_data.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_phy/src/btbb_init.c" ],
             "include_dirs": [ "include", "esp32/include" ]
         },
@@ -954,7 +954,7 @@
             "priv_reqs": [ "esp_system", "esp_driver_gpio", "esp_timer" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_pm/libesp_pm.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_pm/libesp_pm.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_pm/pm_locks.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_pm/pm_trace.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_pm/pm_impl.c" ],
             "include_dirs": [ "include" ]
         },
@@ -984,7 +984,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_ringbuf/libesp_ringbuf.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_ringbuf/libesp_ringbuf.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_ringbuf/ringbuf.c" ],
             "include_dirs": [ "include" ]
         },
@@ -999,7 +999,7 @@
             "priv_reqs": [ "soc", "hal" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_rom/libesp_rom.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_rom/libesp_rom.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_sys.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_print.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_crc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_uart.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_spiflash.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_efuse.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_gpio.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_rom/patches/esp_rom_longjmp.S" ],
             "include_dirs": [ "include", "esp32/include", "esp32/include/esp32", "esp32" ]
         },
@@ -1014,7 +1014,7 @@
             "priv_reqs": [ "efuse", "esp_hw_support", "esp_system", "esp_timer" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_security/libesp_security.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_security/libesp_security.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_security/src/init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_security/src/esp_crypto_lock.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_security/src/esp_crypto_periph_clk.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1029,7 +1029,7 @@
             "priv_reqs": [ "spi_flash", "esp_timer", "esp_mm", "bootloader_support", "esp_pm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_system/libesp_system.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_system/libesp_system.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/esp_err.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/crosscore_int.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/esp_ipc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/esp_system_console.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/freertos_hooks.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/int_wdt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/panic.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/esp_system.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/startup.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/startup_funcs.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/system_time.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/stack_check.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/ubsan.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/xt_wdt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/task_wdt/task_wdt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/task_wdt/task_wdt_impl_timergroup.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/cpu_start.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/panic_handler.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/esp_system_chip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/image_process.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/esp_ipc_isr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/esp_ipc_isr_port.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/esp_ipc_isr_handler.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/esp_ipc_isr_routines.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/panic_arch.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/panic_handler_asm.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/expression_with_stack.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/expression_with_stack_asm.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/debug_helpers.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/debug_helpers_asm.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/debug_stubs.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/arch/xtensa/trax.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/soc/esp32/highint_hdl.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/soc/esp32/clk.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/soc/esp32/reset_reason.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/soc/esp32/system_internal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_system/port/soc/esp32/cache_err_int.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1044,7 +1044,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_timer/libesp_timer.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_timer/libesp_timer.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer/src/esp_timer.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer/src/esp_timer_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer/src/ets_timer_legacy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer/src/system_time.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer/src/esp_timer_impl_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_timer/src/esp_timer_impl_lac.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1059,7 +1059,7 @@
             "priv_reqs": [ "vfs", "esp_driver_uart", "esp_driver_usb_serial_jtag" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_vfs_console/libesp_vfs_console.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_vfs_console/libesp_vfs_console.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_vfs_console/vfs_console.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1074,7 +1074,7 @@
             "priv_reqs": [ "esptool_py", "esp_pm", "esp_timer", "nvs_flash", "wpa_supplicant", "hal", "lwip", "esp_coex" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/esp_wifi/libesp_wifi.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_wifi/libesp_wifi.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/lib_printf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/mesh_event.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/smartconfig.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/wifi_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/wifi_default.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/wifi_netif.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/wifi_default_ap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/esp32/esp_adapter.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/regulatory/esp_wifi_regulatory.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_wifi/src/smartconfig_ack.c" ],
             "include_dirs": [ "include", "include/local", "wifi_apps/include", "wifi_apps/nan_app/include" ]
         },
@@ -1089,7 +1089,7 @@
             "priv_reqs": [ "esp_partition", "spi_flash", "bootloader_support", "mbedtls", "esp_rom", "soc", "esp_system", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/espcoredump/libespcoredump.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/espcoredump/libespcoredump.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_flash.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_uart.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_elf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_binary.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_sha.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/core_dump_crc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/espcoredump/src/port/xtensa/core_dump_port.c" ],
             "include_dirs": [ "include", "include/port/xtensa" ]
         },
@@ -1119,7 +1119,7 @@
             "priv_reqs": [ "vfs", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/fatfs/libfatfs.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/fatfs/libfatfs.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/diskio/diskio.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/diskio/diskio_rawflash.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/diskio/diskio_wl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/src/ff.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/src/ffunicode.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/port/freertos/ffsystem.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/diskio/diskio_sdmmc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/vfs/vfs_fat.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/vfs/vfs_fat_sdmmc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/fatfs/vfs/vfs_fat_spiflash.c" ],
             "include_dirs": [ "diskio", "src", "vfs" ]
         },
@@ -1134,7 +1134,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/freertos/libfreertos.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/freertos/libfreertos.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/heap_idf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/app_startup.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/port_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/port_systick.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/list.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/queue.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/tasks.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/timers.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/event_groups.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/stream_buffer.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/xtensa_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/xtensa_overlay_os_hook.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/esp_additions/freertos_compatibility.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/esp_additions/idf_additions_event_groups.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/freertos/esp_additions/idf_additions.c" ],
             "include_dirs": [ "config/include", "config/include/freertos", "config/xtensa/include", "FreeRTOS-Kernel/include", "FreeRTOS-Kernel/portable/xtensa/include", "FreeRTOS-Kernel/portable/xtensa/include/freertos", "esp_additions/include" ]
         },
@@ -1149,7 +1149,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/hal/libhal.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/hal/libhal.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/hal_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/mpu_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/efuse_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/esp32/efuse_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/wdt_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/mmu_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/esp32/cache_hal_esp32.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/color_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_flash_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_flash_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_flash_encrypt_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/esp32/clk_tree_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/uart_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/uart_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/gpio_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/rtc_io_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/timer_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/ledc_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/ledc_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/i2c_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/i2c_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/rmt_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/pcnt_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/mcpwm_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/twai_hal_v1.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/i2s_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/sdm_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/sdmmc_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/emac_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/adc_hal_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/adc_oneshot_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/adc_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/mpi_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/sha_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/aes_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/brownout_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_slave_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/spi_slave_hal_iram.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/sdio_slave_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/esp32/touch_sensor_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/touch_sensor_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/touch_sens_hal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/hal/esp32/gpio_hal_workaround.c" ],
             "include_dirs": [ "platform_port/include", "esp32/include", "include" ]
         },
@@ -1164,7 +1164,7 @@
             "priv_reqs": [ "soc" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/heap/libheap.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/heap/libheap.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/heap_caps_base.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/heap_caps.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/heap_caps_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/multi_heap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/tlsf/tlsf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/port/memory_layout_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/heap/port/esp32/memory_layout.c" ],
             "include_dirs": [ "include", "tlsf" ]
         },
@@ -1179,7 +1179,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/http_parser/libhttp_parser.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/http_parser/libhttp_parser.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/http_parser/http_parser.c" ],
             "include_dirs": [ "." ]
         },
@@ -1224,7 +1224,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/json/libjson.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/json/libjson.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/json/cJSON/cJSON.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/json/cJSON/cJSON_Utils.c" ],
             "include_dirs": [ "cJSON" ]
         },
@@ -1239,7 +1239,7 @@
             "priv_reqs": [ "hal", "soc", "esp_hw_support" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/log/liblog.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/log/liblog.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/os/log_timestamp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_timestamp_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/os/log_lock.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/buffer/log_buffers.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/os/util.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/util.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_format_text.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_print.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/os/log_write.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_level/log_level.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_level/tag_log_level/tag_log_level.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_level/tag_log_level/linked_list/log_linked_list.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/log/src/log_level/tag_log_level/cache/log_binary_heap.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1254,7 +1254,7 @@
             "priv_reqs": [ "vfs" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/lwip/liblwip.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/lwip/liblwip.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/apps/sntp/sntp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/api_lib.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/api_msg.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/err.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/if_api.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/netbuf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/netdb.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/netifapi.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/sockets.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/api/tcpip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/apps/sntp/sntp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/apps/netbiosns/netbiosns.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/def.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/dns.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/inet_chksum.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/mem.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/memp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/netif.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/pbuf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/raw.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/stats.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/sys.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/tcp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/tcp_in.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/tcp_out.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/timeouts.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/udp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/autoip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/dhcp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/etharp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/icmp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/igmp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/ip4.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/ip4_napt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/ip4_addr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv4/ip4_frag.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/dhcp6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/ethip6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/icmp6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/inet6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/ip6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/ip6_addr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/ip6_frag.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/mld6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/core/ipv6/nd6.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ethernet.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/bridgeif.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/bridgeif_fdb.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/slipif.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/auth.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/ccp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/chap-md5.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/chap-new.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/chap_ms.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/demand.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/eap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/ecp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/eui64.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/fsm.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/ipcp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/ipv6cp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/lcp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/magic.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/mppe.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/multilink.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/ppp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/pppapi.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/pppcrypt.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/pppoe.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/pppol2tp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/pppos.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/upap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/vj.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/hooks/tcp_isn_default.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/hooks/lwip_default_hooks.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/debug/lwip_debug.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/sockets_ext.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/freertos/sys_arch.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/if_index.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/acd_dhcp_check.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/port/esp32xx/vfs_lwip.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/apps/ping/esp_ping.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/apps/ping/ping.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/apps/ping/ping_sock.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/polarssl/arc4.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/polarssl/des.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/polarssl/md4.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/polarssl/md5.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/lwip/src/netif/ppp/polarssl/sha1.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/lwip/apps/dhcpserver/dhcpserver.c" ],
             "include_dirs": [ "include", "include/apps", "include/apps/sntp", "lwip/src/include", "port/include", "port/freertos/include/", "port/esp32xx/include", "port/esp32xx/include/arch", "port/esp32xx/include/sys" ]
         },
@@ -1262,15 +1262,15 @@
             "alias": "idf::main",
             "target": "___idf_main",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/main",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
             "reqs": [ "esp_driver_gpio", "esp_driver_spi", "esp_timer", "app" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/main/libmain.a",
-            "sources": [ "/home/ta1/voltage-source/main/app_main.cpp" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/main/libmain.a",
+            "sources": [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/main/app_main.cpp" ],
             "include_dirs": []
         },
         "mbedtls": {
@@ -1284,8 +1284,8 @@
             "priv_reqs": [ "soc", "esp_hw_support", "esp_pm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/mbedtls/libmbedtls.a",
-            "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mbedtls/esp_crt_bundle/esp_crt_bundle.c", "/home/ta1/voltage-source/build/x509_crt_bundle.S" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/mbedtls/libmbedtls.a",
+            "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mbedtls/esp_crt_bundle/esp_crt_bundle.c", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/x509_crt_bundle.S" ],
             "include_dirs": [ "port/include", "mbedtls/include", "mbedtls/library", "esp_crt_bundle/include" ]
         },
         "mqtt": {
@@ -1299,7 +1299,7 @@
             "priv_reqs": [ "esp_timer", "http_parser", "esp_hw_support", "heap" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/mqtt/libmqtt.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/mqtt/libmqtt.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt/esp-mqtt/mqtt_client.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt/esp-mqtt/lib/mqtt_msg.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt/esp-mqtt/lib/mqtt_outbox.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt/esp-mqtt/lib/platform_esp32_idf.c" ],
             "include_dirs": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/mqtt/esp-mqtt/include" ]
         },
@@ -1314,7 +1314,7 @@
             "priv_reqs": [ "soc", "spi_flash" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/newlib/libnewlib.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/newlib/libnewlib.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/abort.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/assert.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/heap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/locks.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/poll.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/pthread.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/random.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/getentropy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/termios.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/stdatomic.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/time.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/sysconf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/realpath.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/scandir.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/syscalls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/reent_syscalls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/port/esp_time_impl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/flockfile.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/reent_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/newlib_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/newlib/src/port/esp_time_impl.c" ],
             "include_dirs": [ "platform_include" ]
         },
@@ -1322,15 +1322,15 @@
             "alias": "idf::no_os",
             "target": "___idf_no_os",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/no_os",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os",
             "type": "LIBRARY",
             "lib": "__idf_no_os",
             "reqs": [],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/no_os/libno_os.a",
-            "sources": [ "/home/ta1/voltage-source/components/no_os/no_os_alloc.c", "/home/ta1/voltage-source/components/no_os/no_os_gpio.c", "/home/ta1/voltage-source/components/no_os/no_os_spi.c", "/home/ta1/voltage-source/components/no_os/no_os_util.c", "/home/ta1/voltage-source/components/no_os/no_os_mutex.c" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/no_os/libno_os.a",
+            "sources": [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os/no_os_alloc.c", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os/no_os_gpio.c", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os/no_os_spi.c", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os/no_os_util.c", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os/no_os_mutex.c" ],
             "include_dirs": [ "include" ]
         },
         "nvs_flash": {
@@ -1344,7 +1344,7 @@
             "priv_reqs": [ "spi_flash", "newlib" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/nvs_flash/libnvs_flash.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/nvs_flash/libnvs_flash.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_api.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_cxx_api.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_item_hash_list.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_page.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_pagemanager.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_storage.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_handle_simple.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_handle_locked.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_partition.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_partition_lookup.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_partition_manager.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_types.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_platform.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_bootloader.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_encrypted_partition.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_bootloader_aes.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_flash/src/nvs_bootloader_xts_aes.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1359,7 +1359,7 @@
             "priv_reqs": [ "bootloader_support", "efuse", "esp_partition", "nvs_flash" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/nvs_sec_provider/libnvs_sec_provider.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/nvs_sec_provider/libnvs_sec_provider.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/nvs_sec_provider/nvs_sec_provider.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1404,7 +1404,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/perfmon/libperfmon.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/perfmon/libperfmon.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/perfmon/xtensa_perfmon_access.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/perfmon/xtensa_perfmon_apis.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/perfmon/xtensa_perfmon_masks.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1412,15 +1412,15 @@
             "alias": "idf::platform",
             "target": "___idf_platform",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/platform",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/platform",
             "type": "LIBRARY",
             "lib": "__idf_platform",
             "reqs": [ "no_os", "adc", "dac", "esp_driver_spi", "esp_driver_gpio", "esp_timer" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/platform/libplatform.a",
-            "sources": [ "/home/ta1/voltage-source/components/platform/no_os_esp32_spi.c", "/home/ta1/voltage-source/components/platform/spi_configs.c" ],
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/platform/libplatform.a",
+            "sources": [ "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/platform/no_os_esp32_spi.c", "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/platform/spi_configs.c" ],
             "include_dirs": [ "include" ]
         },
         "protobuf-c": {
@@ -1434,7 +1434,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/protobuf-c/libprotobuf-c.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/protobuf-c/libprotobuf-c.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protobuf-c/protobuf-c/protobuf-c/protobuf-c.c" ],
             "include_dirs": [ "protobuf-c" ]
         },
@@ -1449,7 +1449,7 @@
             "priv_reqs": [ "protobuf-c", "mbedtls", "console", "esp_http_server", "esp_driver_uart" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/protocomm/libprotocomm.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/protocomm/libprotocomm.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/common/protocomm.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/proto-c/constants.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/proto-c/sec0.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/proto-c/sec1.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/proto-c/sec2.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/proto-c/session.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/transports/protocomm_console.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/transports/protocomm_httpd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/security/security0.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/security/security1.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/security/security2.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/crypto/srp6a/esp_srp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/protocomm/src/crypto/srp6a/esp_srp_mpi.c" ],
             "include_dirs": [ "include/common", "include/security", "include/transports", "include/crypto/srp6a", "proto-c" ]
         },
@@ -1464,7 +1464,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/pthread/libpthread.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/pthread/libpthread.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread/pthread.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread/pthread_cond_var.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread/pthread_local_storage.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread/pthread_rwlock.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/pthread/pthread_semaphore.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1479,7 +1479,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/rt/librt.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/rt/librt.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/rt/FreeRTOS_POSIX_mqueue.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/rt/FreeRTOS_POSIX_utils.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1494,7 +1494,7 @@
             "priv_reqs": [ "soc", "esp_timer", "esp_mm" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/sdmmc/libsdmmc.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/sdmmc/libsdmmc.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sdmmc_cmd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sdmmc_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sdmmc_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sdmmc_io.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sdmmc_mmc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sdmmc_sd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/sdmmc/sd_pwr_ctrl/sd_pwr_ctrl.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1509,7 +1509,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/soc/libsoc.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/soc/libsoc.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/lldesc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/dport_access_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/interrupts.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/gpio_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/uart_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/dport_access.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/adc_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/emac_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/spi_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/ledc_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/pcnt_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/rmt_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/sdm_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/i2s_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/i2c_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/timer_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/lcd_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/mcpwm_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/mpi_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/sdmmc_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/touch_sensor_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/twai_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/wdt_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/dac_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/rtc_io_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/sdio_slave_periph.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/soc/esp32/power_supply_periph.c" ],
             "include_dirs": [ "include", "esp32", "esp32/include", "esp32/register" ]
         },
@@ -1524,7 +1524,7 @@
             "priv_reqs": [ "bootloader_support", "app_update", "soc", "esp_mm", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/spi_flash/libspi_flash.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/spi_flash/libspi_flash.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/flash_brownout_hook.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_drivers.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_generic.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_issi.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_mxic.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_gd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_winbond.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_boya.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_mxic_opi.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_chip_th.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/memspi_host_driver.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/cache_utils.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/flash_mmap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/flash_ops.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_wrap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/esp_flash_api.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/esp_flash_spi_init.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_os_func_app.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spi_flash/spi_flash_os_func_noos.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1539,7 +1539,7 @@
             "priv_reqs": [ "bootloader_support", "esptool_py", "vfs" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/spiffs/libspiffs.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/spiffs/libspiffs.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/spiffs_api.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/spiffs/src/spiffs_cache.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/spiffs/src/spiffs_check.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/spiffs/src/spiffs_gc.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/spiffs/src/spiffs_hydrogen.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/spiffs/src/spiffs_nucleus.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/spiffs/esp_spiffs.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1554,7 +1554,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/tcp_transport/libtcp_transport.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/tcp_transport/libtcp_transport.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport/transport.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport/transport_ssl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport/transport_internal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport/transport_socks_proxy.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/tcp_transport/transport_ws.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1584,7 +1584,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/unity/libunity.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/unity/libunity.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity/src/unity.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity_compat.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity_runner.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity_utils_freertos.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity_utils_cache.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity_utils_memory.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/unity_port_esp32.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/unity/port/esp/unity_utils_memory_esp.c" ],
             "include_dirs": [ "include", "unity/src" ]
         },
@@ -1614,7 +1614,7 @@
             "priv_reqs": [ "esp_timer", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_vfs_console" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/vfs/libvfs.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/vfs/libvfs.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs/vfs.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs/vfs_eventfd.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs/vfs_semihost.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/vfs/nullfs.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1629,7 +1629,7 @@
             "priv_reqs": [ "spi_flash" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/wear_levelling/libwear_levelling.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/wear_levelling/libwear_levelling.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/Partition.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/SPI_Flash.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/WL_Ext_Perf.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/WL_Ext_Safe.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/WL_Flash.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/crc32.cpp", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wear_levelling/wear_levelling.cpp" ],
             "include_dirs": [ "include" ]
         },
@@ -1644,7 +1644,7 @@
             "priv_reqs": [ "protobuf-c", "bt", "json", "esp_timer", "esp_wifi" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/wifi_provisioning/libwifi_provisioning.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/wifi_provisioning/libwifi_provisioning.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/wifi_config.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/wifi_scan.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/wifi_ctrl.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/manager.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/handlers.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/scheme_console.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/proto-c/wifi_config.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/proto-c/wifi_scan.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/proto-c/wifi_ctrl.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/proto-c/wifi_constants.pb-c.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wifi_provisioning/src/scheme_softap.c" ],
             "include_dirs": [ "include" ]
         },
@@ -1659,7 +1659,7 @@
             "priv_reqs": [ "mbedtls", "esp_timer", "esp_wifi" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/wpa_supplicant/libwpa_supplicant.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/wpa_supplicant/libwpa_supplicant.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/port/os_xtensa.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/port/eloop.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/ap_config.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/ieee802_1x.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/wpa_auth.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/wpa_auth_ie.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/pmksa_cache_auth.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/sta_info.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/ieee802_11.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/ap/comeback_token.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/common/sae.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/common/dragonfly.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/common/wpa_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/bitfield.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/aes-siv.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha256-kdf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/ccmp.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/aes-gcm.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/crypto_ops.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/dh_group5.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/dh_groups.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/ms_funcs.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha1-tlsprf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha256-tlsprf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha384-tlsprf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha256-prf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha1-prf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha384-prf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/md4-internal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/sha1-tprf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_common/eap_wsc_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/common/ieee802_11_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/chap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_mschapv2.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_peap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_peap_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_tls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_tls_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_ttls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/mschapv2.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_fast.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_fast_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/eap_peer/eap_fast_pac.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/rsn_supp/pmksa_cache.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/rsn_supp/wpa.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/rsn_supp/wpa_ie.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/base64.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/ext_password.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/uuid.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/wpabuf.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/wpa_debug.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/utils/json.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps_attr_build.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps_attr_parse.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps_attr_process.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps_dev_attr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/wps/wps_enrollee.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/common/sae_pk.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_eap_client.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_wpa2_api_port.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_wpa_main.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_wpas_glue.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_common.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_wps.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_wpa3.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_owe.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/esp_hostap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/crypto/tls_mbedtls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls-bignum.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls-rsa.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/crypto/crypto_mbedtls-ec.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/rc4.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/des-internal.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/esp_supplicant/src/crypto/fastpbkdf2.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/aes-wrap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/aes-unwrap.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/wpa_supplicant/src/crypto/aes-ccm.c" ],
             "include_dirs": [ "include", "port/include", "esp_supplicant/include" ]
         },
@@ -1674,7 +1674,7 @@
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "file": "/home/ta1/voltage-source/build/esp-idf/xtensa/libxtensa.a",
+            "file": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/xtensa/libxtensa.a",
             "sources": [ "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/eri.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xt_trax.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_context.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_intr_asm.S", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_intr.c", "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/xtensa/xtensa_vectors.S" ],
             "include_dirs": [ "esp32/include", "include", "deprecated_include" ]
         }
@@ -2980,7 +2980,7 @@
             "alias": "idf::main",
             "target": "___idf_main",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/main",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/main",
             "lib": "__idf_main",
             "reqs": [ "esp_driver_gpio", "esp_driver_spi", "esp_timer", "app" ],
             "priv_reqs": [],
@@ -2992,7 +2992,7 @@
             "alias": "idf::adc",
             "target": "___idf_adc",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/drivers/adc",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/adc",
             "lib": "__idf_adc",
             "reqs": [ "no_os", "platform" ],
             "priv_reqs": [],
@@ -3004,7 +3004,7 @@
             "alias": "idf::dac",
             "target": "___idf_dac",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/drivers/dac",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/drivers/dac",
             "lib": "__idf_dac",
             "reqs": [ "no_os" ],
             "priv_reqs": [],
@@ -3016,7 +3016,7 @@
             "alias": "idf::app",
             "target": "___idf_app",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/app",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/app",
             "lib": "__idf_app",
             "reqs": [ "nvs_flash", "adc", "dac", "platform", "no_os" ],
             "priv_reqs": [],
@@ -3028,7 +3028,7 @@
             "alias": "idf::no_os",
             "target": "___idf_no_os",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/no_os",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/no_os",
             "lib": "__idf_no_os",
             "reqs": [],
             "priv_reqs": [],
@@ -3040,7 +3040,7 @@
             "alias": "idf::platform",
             "target": "___idf_platform",
             "prefix": "idf",
-            "dir": "/home/ta1/voltage-source/components/platform",
+            "dir": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/components/platform",
             "lib": "__idf_platform",
             "reqs": [ "no_os", "adc", "dac", "esp_driver_spi", "esp_driver_gpio", "esp_timer" ],
             "priv_reqs": [],
@@ -3051,10 +3051,10 @@
     },
     "debug_prefix_map_gdbinit": "",
     "gdbinit_files": {
-        "01_symbols": "/home/ta1/voltage-source/build/gdbinit/symbols",
-        "02_prefix_map": "/home/ta1/voltage-source/build/gdbinit/prefix_map",
-        "03_py_extensions": "/home/ta1/voltage-source/build/gdbinit/py_extensions",
-        "04_connect": "/home/ta1/voltage-source/build/gdbinit/connect"
+        "01_symbols": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/symbols",
+        "02_prefix_map": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/prefix_map",
+        "03_py_extensions": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/py_extensions",
+        "04_connect": "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/connect"
     },
     "debug_arguments_openocd": "-f board/esp32-wrover-kit-3.3v.cfg"
 }

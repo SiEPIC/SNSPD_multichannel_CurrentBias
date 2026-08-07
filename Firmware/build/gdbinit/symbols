@@ -18,8 +18,8 @@ end
 
 # Load bootloader symbols
 set confirm off
-    add-symbol-file /home/ta1/voltage-source/build/bootloader/bootloader.elf
+    add-symbol-file /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader/bootloader.elf
 set confirm on
 
 # Load application symbols
-file /home/ta1/voltage-source/build/multi_channel_voltage_source_fw.elf
+file /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/multi_channel_voltage_source_fw.elf

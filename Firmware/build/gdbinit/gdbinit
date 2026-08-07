@@ -1,2 +1,2 @@
-source /home/ta1/voltage-source/build/gdbinit/symbols
-source /home/ta1/voltage-source/build/gdbinit/connect
+source /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/symbols
+source /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/connect
