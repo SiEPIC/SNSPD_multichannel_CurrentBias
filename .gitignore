@@ -5,3 +5,6 @@ Firmware/sdkconfig
 
 GUI/controller/__pycache__
 GUI/layout/__pycache__
+GUI/output
+GUI/.venv/*
+
