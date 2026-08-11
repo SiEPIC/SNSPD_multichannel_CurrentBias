@@ -78,7 +78,7 @@ Download GUI installer file for your device's OS
 
 1. Open the application
 2. Select Easy Installation
-3. Choose version v.5.4.4
+3. Choose version `v.5.4.4`
 4. Start installation
 
 ### 3. Flashing Firmware
@@ -102,7 +102,7 @@ idf.py flash
 ```
 
 ##### Multiple USB connections:
-
+Need to specify the USB port with esp32 connection.
 
 | OS | How to find it | Example |
 |---|---|---|
@@ -127,7 +127,7 @@ sudo usermod -aG dialout $YOUR_USER
 # Nix flake (For NixOS):
 
 **[Nix installation guide](https://nix.dev/install-nix.html)** \
-No need to separately install uv or libusb
+No need to separately install `uv` or `libusb`
 
 ```bash
 cd GUI/ 
