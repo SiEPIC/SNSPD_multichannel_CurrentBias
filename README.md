@@ -80,7 +80,6 @@ source .venv/bin/activate
 ### Windows:
 
 ```bash
-<<<<<<< HEAD
 cd GUI\ 
 uv venv --python 3.10 
 =======
