@@ -3,15 +3,22 @@
 - [GUI Launch](#gui-launch)
   - [Install uv](#1-install-uv-python-package-and-project-manager)
   - [Create Python Environment](#2-create-python-environment)
+    - [MacOS & linux](#macos--linux-required-dependency-libusb)
+    - [Windows](#windows)
   - [Launch GUI](#3-launch-gui)
 - [Firmware Setup](#firmware-setup)
   - [EIM Application Installation](#1-install-esp-idf-installation-manager-eim-application)
   - [EIM setup](#2-eim-setup)
   - [Flashing Firmware](#3-flashing-firmware)
+- [Nix Flake](#nix-flake-for-nixos)
+
+<br>
 
 # Overview of SNSPD biasing current source
 
 
+
+<br>
 
 # GUI Launch:
 
@@ -20,7 +27,8 @@
 
 ### 2. Create Python environment 
 
-### MacOS & Linux (Required dependency: `libusb`):
+### MacOS & Linux 
+Requires `libusb` installation.
 - MacOS:
 
 ```bash
@@ -53,14 +61,15 @@ source .venv\Scripts\activate
 ```bash
 python3 main.py
 ```
-GUI runs locally as a html file \
+GUI runs locally as an html file \
 Default URL: `http://127.0.0.1:8006`
 
+<br>
 
 # Firmware Setup
 
 ### 1. Install ESP-IDF Installation Manager (EIM) Application
-\
+
 **[EIM GUI Installation Guide](https://dl.espressif.com/dl/eim/?tab=online)** \
 \
 Download GUI installer file for your device's OS 
@@ -68,26 +77,42 @@ Download GUI installer file for your device's OS
 ### 2. EIM Setup 
 
 1. Open the application
+<br>
+
 2. Select Easy Installation
+<br>
+
 3. Choose version v.5.4.4
+<br>
+
 4. Start installation
 
 ### 3. Flashing Firmware
 1. Go to ESP-IDF Version Management in the application 
+<br>
+
 2. Open `IDF terminal` by clicking the laptop icon on the left
+<br>
+
 3. Move to the cloned repository
 ```bash
 cd <YOUR_PATH>/SNSPD_multichannel_CurrentBias/Firmware/
 ```
-4. Connect laptop and ESP32 with micro USB cable
-5. Flash firmware
+
+4. Build firmware
 ```bash
 idf.py set-target esp32
 idf.py build
+```
+5. Connect laptop and ESP32 with micro USB cable
+<br>
+
+6. Flash firmware  
+```bash
 idf.py flash 
 ```
-\
-USB port needs to be specified for flashing when there are multiple USB connections 
+
+##### Finding USB port and flashing to esp32 when there are multiple USB connections:
 
 
 | OS | How to find it | Example |
@@ -103,12 +128,12 @@ idf.py -p <your_port> flash
 #e.g. idf.py -p /dev/ttyUSB0 flash
 ```
 
-#### Linux only
+##### Linux only
 Need to add group for permission
 ```bash
 sudo usermod -aG dialout $YOUR_USER
 ```
-
+<br>
 
 # Nix flake (For NixOS):
 
