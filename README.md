@@ -1,5 +1,6 @@
+
 ## Table of Contents
-- [Overview](#overview-of-snspd-biasing-current-source)
+- [Overview](#overview-of-the-4-channel-snspd-biasing-current-source)
 - [GUI Launch](#gui-launch)
   - [Install uv](#1-install-uv-python-package-and-project-manager)
   - [Create Python Environment](#2-create-python-environment)
@@ -14,9 +15,37 @@
 
 <br>
 
-# Overview of SNSPD biasing current source
+# Overview of the 4-channel SNSPD biasing current source
+
+![PCB](./Documentation/images/pcb.jpg)
+
+#### Objective:
+
+SMU is used for SNSPD to: 
+1. Determine switching current (Typically around $3 \mu A$) by hysteresis V-I sweep measurement
+2. Source steady biasing current to the nano-wire
+
+However, the commercial SMUs are typically **single channel**, and large sweep range it offers is unnecessary to source what SNSPD needs. 
+
+This quasi-current source provides necessary features for SNSPD biasing with **4 channels** at around 200CAD per assembled PCB. 
 
 
+#### Features:
+- Hysteresis V-I sweep with controllable range (maximum $\pm 1.0 V$) 
+    - With $100 k \Omega$ resistor down steam, current will be around $10 \mu A$ at $1.0V$
+    - Measurement will be plotted on GUI and also saved as an CSV file 
+- Steady biasing current sourcing at set voltage
+- 4 channels independently controlled via GUI
+- 10nA measurement precision
+- ODR settings per channel
+
+#### Requires:
+- Assembled PCB 
+- 9V / 1A Power Adapter (Current output higher than 1A is also fine)
+- Micro USB cable
+- Computer 
+- $100k \Omega$ Resistor 
+- Electrometer (Only for initial calibration)
 
 <br>
 
@@ -65,6 +94,21 @@ GUI runs locally as an html file \
 Default URL: `http://127.0.0.1:8006`
 
 <br>
+
+# GUI Instruction
+
+## Connecting to ESP32
+
+## Initial Calibration
+
+## ODR Settings
+
+## Steady Mode 
+
+## Sweep Mode
+
+### Hysteresis V-I plot
+
 
 # Firmware Setup
 
