@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/CMakeFiles/bootloader"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/CMakeFiles/bootloader.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		}
 	],
 	"target" : 

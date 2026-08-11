@@ -1,4 +1,4 @@
-# Install script for directory: /home/ta1/SNSPD_multichannel_CurrentBias/Firmware
+# Install script for directory: /Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,18 +34,18 @@ endif()
 
 # Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/nix/store/mki4nsr1cw3h2mpqywym2x14lwsj36ax-xtensa-esp-elf-esp-idf-v5.5.2/bin/xtensa-esp32-elf-objdump")
+  set(CMAKE_OBJDUMP "/Users/ta1_k/.espressif/tools/xtensa-esp-elf/esp-14.2.0_20260121/xtensa-esp-elf/bin/xtensa-esp32-elf-objdump")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/cmake_install.cmake")
+  include("/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/cmake_install.cmake")
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/install_local_manifest.txt"
+  file(WRITE "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()
 if(CMAKE_INSTALL_COMPONENT)
@@ -61,6 +61,6 @@ else()
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

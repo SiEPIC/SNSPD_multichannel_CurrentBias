@@ -1,4 +1,4 @@
-# Install script for directory: /nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/esp_driver_gpio
+# Install script for directory: /Users/ta1_k/.espressif/v5.4.4/esp-idf/components/esp_driver_gpio
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,12 +34,12 @@ endif()
 
 # Set path to fallback-tool for dependency-resolution.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/nix/store/mki4nsr1cw3h2mpqywym2x14lwsj36ax-xtensa-esp-elf-esp-idf-v5.5.2/bin/xtensa-esp32-elf-objdump")
+  set(CMAKE_OBJDUMP "/Users/ta1_k/.espressif/tools/xtensa-esp-elf/esp-14.2.0_20260121/xtensa-esp-elf/bin/xtensa-esp32-elf-objdump")
 endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
 if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_gpio/install_local_manifest.txt"
+  file(WRITE "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/esp-idf/esp_driver_gpio/install_local_manifest.txt"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

@@ -1,2 +1,2 @@
-source /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/symbols
-source /home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/connect
+source /Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/symbols
+source /Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/gdbinit/connect

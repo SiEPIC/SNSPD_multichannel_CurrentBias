@@ -6,22 +6,22 @@ cmake_minimum_required(VERSION ${CMAKE_VERSION}) # this file comes with cmake
 # If CMAKE_DISABLE_SOURCE_CHANGES is set to true and the source directory is an
 # existing directory in our source tree, calling file(MAKE_DIRECTORY) on it
 # would cause a fatal error, even though it would be a no-op.
-if(NOT EXISTS "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject")
-  file(MAKE_DIRECTORY "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2/components/bootloader/subproject")
+if(NOT EXISTS "/Users/ta1_k/.espressif/v5.4.4/esp-idf/components/bootloader/subproject")
+  file(MAKE_DIRECTORY "/Users/ta1_k/.espressif/v5.4.4/esp-idf/components/bootloader/subproject")
 endif()
 file(MAKE_DIRECTORY
-  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader"
-  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix"
-  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/tmp"
-  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp"
-  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src"
-  "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp"
+  "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader"
+  "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix"
+  "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/tmp"
+  "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp"
+  "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src"
+  "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "/Users/ta1_k/SNSPD_multichannel_CurrentBias/Firmware/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()
