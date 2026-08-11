@@ -1,0 +1,45 @@
+[project]
+name = "gui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "ta1_k", email = "t.kamei0716@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "bottle==0.13.4",
+    "contourpy==1.3.2",
+    "cycler==0.12.1",
+    "fonttools==4.63.0",
+    "kiwisolver==1.5.0",
+    "matplotlib==3.10.9",
+    "numpy==2.2.6",
+    "packaging==26.3",
+    "pillow==12.3.0",
+    "proxy-tools==0.1.0",
+    "pyparsing==3.3.2",
+    "pyqt6==6.11.0",
+    "pyqt6-qt6==6.11.1",
+    "pyqt6-sip==13.12.0",
+    "pyqt6-webengine==6.11.0",
+    "pyqt6-webengine-qt6==6.11.1",
+    "pyserial==3.5",
+    "python-dateutil==2.9.0.post0",
+    "pyusb==1.3.1",
+    "pyvisa==1.16.2",
+    "pyvisa-py==0.8.1",
+    "pywebview==6.2.1",
+    "qtpy==2.4.3",
+    "remi==2022.7.27",
+    "setuptools==80.10.2",
+    "six==1.17.0",
+    "typing-extensions==4.16.0",
+]
+
+[project.scripts]
+gui = "gui:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"

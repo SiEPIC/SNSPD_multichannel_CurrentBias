@@ -1,7 +1,12 @@
 Firmware/.cache/*
+Firmware/build/*
 Firmware/.clangd
 Firmware/.DS_Store
 Firmware/sdkconfig
+Firmware/sdkconfig.old
 
 GUI/controller/__pycache__
 GUI/layout/__pycache__
+GUI/output
+GUI/.venv/*
+
