@@ -3,6 +3,7 @@ Firmware/build/*
 Firmware/.clangd
 Firmware/.DS_Store
 Firmware/sdkconfig
+Firmware/sdkconfig.old
 
 GUI/controller/__pycache__
 GUI/layout/__pycache__

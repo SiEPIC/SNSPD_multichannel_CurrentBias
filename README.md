@@ -4,7 +4,7 @@
 - [GUI Launch](#gui-launch)
   - [Install uv](#1-install-uv-python-package-and-project-manager)
   - [Create Python Environment](#2-create-python-environment)
-    - [MacOS & linux](#macos--linux-required-dependency-libusb)
+    - [MacOS & linux](#macos--linux)
     - [Windows](#windows)
   - [Launch GUI](#3-launch-gui)
 - [Firmware Setup](#firmware-setup)
