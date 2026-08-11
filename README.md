@@ -80,9 +80,6 @@ source .venv/bin/activate
 ### Windows:
 
 ```bash
-cd GUI\ 
-uv venv --python 3.10 
-=======
 cd \GUI
 
 uv sync 
