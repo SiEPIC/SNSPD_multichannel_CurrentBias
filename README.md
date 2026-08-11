@@ -77,42 +77,31 @@ Download GUI installer file for your device's OS
 ### 2. EIM Setup 
 
 1. Open the application
-<br>
-
 2. Select Easy Installation
-<br>
-
 3. Choose version v.5.4.4
-<br>
-
 4. Start installation
 
 ### 3. Flashing Firmware
 1. Go to ESP-IDF Version Management in the application 
-<br>
-
 2. Open `IDF terminal` by clicking the laptop icon on the left
-<br>
-
 3. Move to the cloned repository
 ```bash
 cd <YOUR_PATH>/SNSPD_multichannel_CurrentBias/Firmware/
 ```
-
 4. Build firmware
 ```bash
 idf.py set-target esp32
 idf.py build
 ```
 5. Connect laptop and ESP32 with micro USB cable
-<br>
-
 6. Flash firmware  
+
+##### Single USB connection:
 ```bash
 idf.py flash 
 ```
 
-##### Finding USB port and flashing to esp32 when there are multiple USB connections:
+##### Multiple USB connections:
 
 
 | OS | How to find it | Example |
