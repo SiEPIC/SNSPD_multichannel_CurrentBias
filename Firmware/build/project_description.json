@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "multi_channel_voltage_source_fw",
-    "project_version":    "dc3e8f9-dirty",
+    "project_version":    "7e80bc7-dirty",
     "project_path":       "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware",
     "idf_path":           "/nix/store/516xlp8n62j0jwj47gjyy6w120zi3rd8-esp-idf-v5.5.2",
     "build_dir":          "/home/ta1/SNSPD_multichannel_CurrentBias/Firmware/build",

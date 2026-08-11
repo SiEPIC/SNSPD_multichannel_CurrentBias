@@ -1,5 +1,5 @@
 {
-  description = "SNSPD voltage source GUI dev environment (Python 3.10 + uv)";
+  description = "SNSPD voltage source GUI (Python 3.10 + uv)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
@@ -16,11 +16,11 @@
             pkgs.python310
             pkgs.uv
             pkgs.libusb1
-          ];
+          ] ++ pkgs.lib.optional pkgs.stdenv.isLinux pkgs.gcc14.cc.lib;
 
           shellHook = ''
             ${pkgs.lib.optionalString pkgs.stdenv.isLinux ''
-              export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.libusb1.out}/lib:$LD_LIBRARY_PATH
+              export LD_LIBRARY_PATH=${pkgs.gcc14.cc.lib}/lib:${pkgs.libusb1.out}/lib:$LD_LIBRARY_PATH
             ''}
 
             if [ ! -d .venv ]; then

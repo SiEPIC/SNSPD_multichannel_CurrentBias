@@ -34,6 +34,7 @@ uv pip install -r requirements.txt
 ## Windows:
 
 ```bash
+cd GUI\ 
 uv venv --python 3.10 
 source .venv\Scripts\activate
 uv pip install -r requirements.txt 

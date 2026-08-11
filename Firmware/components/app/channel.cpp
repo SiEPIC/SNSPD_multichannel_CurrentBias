@@ -331,7 +331,6 @@ auto Channel::load_calibration() -> current_sense_t {
 
 
 void Channel::set_calibration(const UserCmd& cmd){
-  ESP_LOGI(TAG, "reached here");
 
   float r1k = cmd.param.Cal.R_1k;
   float rg = cmd.param.Cal.R_gain;
@@ -342,15 +341,15 @@ void Channel::set_calibration(const UserCmd& cmd){
     return;
   }
 
-  if (r1k < R_1K_DEFAULT * (1.0 - R_1K_TOL) || r1k > R_1K_DEFAULT * (1.0 + R_1K_TOL)){
-    ESP_LOGE(TAG, "1k resistor value is not within %.2f%% tolerance", R_1K_TOL * 100);
-    return;
-  }
-
-  else if (rg < R_GAIN_DEFAULT * (1.0 - R_GAIN_TOL) || rg > R_GAIN_DEFAULT * (1.0 + R_GAIN_TOL)){
-    ESP_LOGE(TAG, "Op-amp gain resistor value is not within %.2f%% tolerance", R_GAIN_TOL * 100);
-    return;
-  }
+  // if (r1k < R_1K_DEFAULT * (1.0 - R_1K_TOL) || r1k > R_1K_DEFAULT * (1.0 + R_1K_TOL)){
+  //   ESP_LOGE(TAG, "1k resistor value is not within %.2f%% tolerance", R_1K_TOL * 100);
+  //   return;
+  // }
+  //
+  // else if (rg < R_GAIN_DEFAULT * (1.0 - R_GAIN_TOL) || rg > R_GAIN_DEFAULT * (1.0 + R_GAIN_TOL)){
+  //   ESP_LOGE(TAG, "Op-amp gain resistor value is not within %.2f%% tolerance", R_GAIN_TOL * 100);
+  //   return;
+  // }
 
   else if (vref < DAC_VREF_DEFAULT * (1.0 - DAC_VREF_TOL) 
            || vref > DAC_VREF_DEFAULT * (1.0 + DAC_VREF_TOL)){
