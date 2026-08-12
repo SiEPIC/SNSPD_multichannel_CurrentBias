@@ -30,13 +30,19 @@ bool Channel::init(uint8_t id, ad717x_dev* adc_dev, ad5761r_dev* dac_dev){
   if (adc_dev == nullptr || dac_dev == nullptr) return false;
 
   channel_id = id;
-  channel_odr = ODR_DEFAULT;
   adc_dev_ = adc_dev;
   dac_dev_ = dac_dev;
 
   current_sense_data_ = load_calibration();
   ad5761r_write_update_dac_register(dac_dev_, voltage_to_bin(0.0f));
 
+  ad717x_set_channel_status(adc_dev_, channel_id, true);
+  AD717X_WaitForReady(adc_dev_, AD717X_CONV_TIMEOUT);
+  int32_t err = ad717x_configure_device_odr(adc_dev_, channel_id, sps_10);
+  ESP_LOGI(TAG, "%u", err);
+  channel_odr = ODR_DEFAULT;
+
+  AD717X_WaitForReady(adc_dev_, AD717X_CONV_TIMEOUT);
   adc_internal_calibration();
   ad717x_set_channel_status(adc_dev_, channel_id, false);
 
@@ -107,7 +113,6 @@ void Channel::sweep_run(){
   if (sweep_.next_step_rdy){
 
     sweep_.next_step_rdy = false;
-    ad5761r_write_update_dac_register(dac_dev_, voltage_to_bin(sweep_.voltage_in_V_));
 
     switch (sweep_.phase_){
 
@@ -115,34 +120,38 @@ void Channel::sweep_run(){
 
         if (sweep_.voltage_in_V_ < sweep_.range_in_V_){
           sweep_.voltage_in_V_ += sweep_.step_size_V_;
+          break;
         }
         else{
           sweep_.phase_ = SweepPhase::SECOND;
         }
-        break;
+        // break is not used at the end of case to transition to next phase without unecessary double measurement at max range
 
       case SweepPhase::SECOND:
 
         if (sweep_.voltage_in_V_ > - sweep_.range_in_V_){
           sweep_.voltage_in_V_ -= sweep_.step_size_V_;
+          break;
         }
         else{
           sweep_.phase_ = SweepPhase::THIRD;
         }
-        break;
+        // No break here for same reason
 
       case SweepPhase::THIRD:
 
         if (sweep_.voltage_in_V_ < 0){
           sweep_.voltage_in_V_ += sweep_.step_size_V_;
+          break;
         }
         else{
           ESP_LOGI(TAG, "Ch%d sweep done", channel_id);
           stop();
+          return;
         }
-        break;
     }
-    
+    ad5761r_write_update_dac_register(dac_dev_, voltage_to_bin(sweep_.voltage_in_V_));
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -241,6 +250,8 @@ void Channel::set_odr(float new_odr){
       ad717x_configure_device_odr(adc_dev_, channel_id, entry.odr);
       AD717X_WaitForReady(adc_dev_, AD717X_CONV_TIMEOUT);
       ad717x_set_channel_status(adc_dev_, channel_id, false);
+      ESP_LOGI(TAG, "ODR set to %.2f", new_odr);
+      channel_odr = new_odr;
       return;
     }
   }
