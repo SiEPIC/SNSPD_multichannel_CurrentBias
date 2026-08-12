@@ -110,11 +110,36 @@ class ScpiMeterController:
             self._resource = ""
             self.idn = ""
         if inst is not None:
+            self._return_to_local(inst)
             try:
                 inst.close()
             except Exception:
                 pass
             self._log("[Meter] Disconnected")
+
+    @staticmethod
+    def _return_to_local(inst):
+        """Hand the meter back to LOCAL via USBTMC-USB488 control transfers.
+
+        SCPI ``:SYST:LOC`` throws error -113 ("Undefined header") on meters
+        that don't speak plain SCPI at the top level (e.g. Keithley in TSP
+        mode). Instead we issue the USBTMC-488 class-specific control
+        requests, which act on the meter's USB stack — not its SCPI parser —
+        so no error is ever printed to the meter display.
+
+        bmRequestType = 0xA1 (device-to-host, class, interface)
+        bRequest      = 0x01 REN_CONTROL, wValue=0 → deassert Remote Enable
+        bRequest      = 0x02 GO_TO_LOCAL
+        Both return a 1-byte USBTMC status.
+        """
+        control_in = getattr(inst, "control_in", None)
+        if control_in is None:
+            return  # not a USB resource; nothing safe/portable to do here
+        for req in (0x01, 0x02):
+            try:
+                control_in(0xA1, req, 0x0000, 0x0000, 1)
+            except Exception:
+                pass
 
     # -- low-level SCPI I/O (all lock-protected) --
 

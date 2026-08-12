@@ -34,13 +34,22 @@ class VoltageSourceController:
         self._data_lock = threading.Lock()
         self._new_data: dict[int, bool] = {i: False for i in range(4)}
 
-        # Per-channel sweep CSVs (one file per sweep run, per channel).
-        # There is no "master" CSV — only SWEEP mode is logged to disk.
+        # Per-channel sweep TXTs (one file per sweep run, per channel).
+        # There is no "master" log — only SWEEP mode is logged to disk here.
         self._sweep_dir: str = "output"
         self._sweep_files: dict[int, object] = {}
         self._sweep_writers: dict[int, object] = {}
         self._sweep_paths: dict[int, str] = {}
         self._sweep_lock = threading.Lock()
+
+        # Per-channel STEADY TXT logs (opened by the GUI when the user starts
+        # a steady run with a timer AND at least one meter connected). PCB
+        # samples are appended here from the reader thread; the GUI appends
+        # meter samples.
+        self._steady_files: dict[int, object] = {}
+        self._steady_writers: dict[int, object] = {}
+        self._steady_paths: dict[int, str] = {}
+        self._steady_lock = threading.Lock()
 
         self._reading = False
         self._reader_thread: threading.Thread | None = None
@@ -240,18 +249,18 @@ class VoltageSourceController:
         self.send_command(f"{channel_id},ODR,{rate}")
 
     def start_sweep_log(self, channel_id: int) -> str:
-        """Open a fresh per-channel CSV for an incoming sweep run.
+        """Open a fresh per-channel TXT for an incoming sweep run.
 
         Closes any previous sweep file for this channel. Returns the new path
         or "" on failure.
         """
         os.makedirs(self._sweep_dir, exist_ok=True)
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        path = os.path.join(self._sweep_dir, f"vs_ch{channel_id}_sweep_{timestamp}.csv")
+        path = os.path.join(self._sweep_dir, f"vs_ch{channel_id}_sweep_{timestamp}.txt")
         try:
             f = open(path, "w", newline="")
-            w = csv.writer(f)
-            w.writerow(["voltage", "current", "time_s"])
+            w = csv.writer(f, delimiter="\t")
+            w.writerow(["voltage_V", "current_uA", "time_s"])
             f.flush()
         except Exception as e:
             print(f"[VoltageSource] Failed to open sweep log Ch{channel_id}: {e}")
@@ -266,7 +275,7 @@ class VoltageSourceController:
         return path
 
     def stop_sweep_log(self, channel_id: int):
-        """Close the sweep CSV for this channel if one is open."""
+        """Close the sweep TXT for this channel if one is open."""
         with self._sweep_lock:
             self._close_sweep_locked(channel_id)
 
@@ -283,6 +292,75 @@ class VoltageSourceController:
     def sweep_log_path(self, channel_id: int) -> str:
         with self._sweep_lock:
             return self._sweep_paths.get(channel_id, "")
+
+    # ---- STEADY txt log ---------------------------------------------------
+    def start_steady_log(self, channel_id: int, applied_voltage: float,
+                          duration_s: float | None, meter_indices: list[int]) -> str:
+        """Open a per-channel TXT log for a steady run.
+
+        Columns: timestamp_epoch, source, voltage_V, current_uA.
+        `source` is "pcb" or "meter{idx}" so both streams can coexist.
+        Returns "" on failure.
+        """
+        os.makedirs(self._sweep_dir, exist_ok=True)
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = os.path.join(self._sweep_dir,
+                            f"vs_ch{channel_id}_steady_{timestamp}.txt")
+        try:
+            f = open(path, "w", newline="")
+            dur_str = "inf" if duration_s is None else f"{duration_s:.1f}s"
+            f.write(f"# Ch {channel_id} steady log\n")
+            f.write(f"# applied_voltage_V\t{applied_voltage:.6f}\n")
+            f.write(f"# duration\t{dur_str}\n")
+            f.write(f"# meters\t{','.join(str(i) for i in meter_indices) or 'none'}\n")
+            w = csv.writer(f, delimiter="\t")
+            w.writerow(["timestamp_epoch", "source", "voltage_V", "current_uA"])
+            f.flush()
+        except Exception as e:
+            print(f"[VoltageSource] Failed to open steady log Ch{channel_id}: {e}")
+            return ""
+
+        with self._steady_lock:
+            self._close_steady_locked(channel_id)
+            self._steady_files[channel_id] = f
+            self._steady_writers[channel_id] = w
+            self._steady_paths[channel_id] = path
+        print(f"[VoltageSource] Ch{channel_id} steady log → {path}")
+        return path
+
+    def stop_steady_log(self, channel_id: int):
+        with self._steady_lock:
+            self._close_steady_locked(channel_id)
+
+    def _close_steady_locked(self, channel_id: int):
+        f = self._steady_files.pop(channel_id, None)
+        self._steady_writers.pop(channel_id, None)
+        self._steady_paths.pop(channel_id, None)
+        if f is not None:
+            try:
+                f.close()
+            except Exception:
+                pass
+
+    def steady_log_path(self, channel_id: int) -> str:
+        with self._steady_lock:
+            return self._steady_paths.get(channel_id, "")
+
+    def write_steady_row(self, channel_id: int, source: str,
+                          voltage_V: float, current_uA: float):
+        """Append one row to the channel's steady log if it's open."""
+        with self._steady_lock:
+            w = self._steady_writers.get(channel_id)
+            f = self._steady_files.get(channel_id)
+            if w is None or f is None:
+                return
+            try:
+                v_str = "" if voltage_V is None else f"{voltage_V:.6f}"
+                w.writerow([f"{time.time():.3f}", source, v_str,
+                            f"{current_uA:.6f}"])
+                f.flush()
+            except Exception:
+                pass
 
     def start_reading(self, output_dir: str = "output"):
         """Start the background reader thread. Only SWEEP mode logs to disk."""
@@ -309,6 +387,9 @@ class VoltageSourceController:
         with self._sweep_lock:
             for ch in list(self._sweep_files.keys()):
                 self._close_sweep_locked(ch)
+        with self._steady_lock:
+            for ch in list(self._steady_files.keys()):
+                self._close_steady_locked(ch)
         print("[VoltageSource] Stopped reading")
 
     def _handle_lost_connection(self, reason: str):
@@ -461,6 +542,19 @@ class VoltageSourceController:
                     if w is not None and f is not None:
                         try:
                             w.writerow([voltage, current, time_s])
+                            f.flush()
+                        except Exception:
+                            pass
+
+            # Per-channel steady log (mode 1 = STEADY)
+            elif mode == 1:
+                with self._steady_lock:
+                    w = self._steady_writers.get(channel_id)
+                    f = self._steady_files.get(channel_id)
+                    if w is not None and f is not None:
+                        try:
+                            w.writerow([f"{time.time():.3f}", "pcb",
+                                        f"{voltage:.6f}", f"{current:.6f}"])
                             f.flush()
                         except Exception:
                             pass

@@ -74,19 +74,29 @@ def _clamp(v, lo, hi):
 
 
 # ---------------------------------------------------------------------------
-# Log buffer (module-level so both worker threads and GUI can write)
+# Log buffers (module-level so both worker threads and GUI can write)
 # ---------------------------------------------------------------------------
 _log_lines: list[str] = []
 _log_seq = 0
 _LOG_MAX = 2000
 
+# Calib tab shows a filtered subset (meter connect + recalibration only).
+_calib_log_lines: list[str] = []
+_calib_log_seq = 0
+_CALIB_LOG_MAX = 400
 
-def _log(msg: str):
-    global _log_seq
+
+def _log(msg: str, *, calib: bool = False):
+    global _log_seq, _calib_log_seq
     _log_lines.append(msg)
     if len(_log_lines) > _LOG_MAX:
         del _log_lines[:len(_log_lines) - _LOG_MAX]
     _log_seq += 1
+    if calib:
+        _calib_log_lines.append(msg)
+        if len(_calib_log_lines) > _CALIB_LOG_MAX:
+            del _calib_log_lines[:len(_calib_log_lines) - _CALIB_LOG_MAX]
+        _calib_log_seq += 1
     print(msg, flush=True)
 
 
@@ -149,13 +159,16 @@ class VoltageSourceApp(App):
 
         self._readout_lbls = [None] * 4        # live current display
         self._sweep_link_lbls = [None] * 4     # "View Plot" link (per channel)
+        self._sweep_dot_lbls = [None] * 4      # blue "new sweep" indicator
         self._apply_btns = [None] * 4
 
         self._selected_modes = ["OFF"] * 4     # what user picked in mode buttons
         self._active_modes = ["OFF"] * 4       # what firmware last reported
         self._applied_voltages = [0.0] * 4
         self._sweep_active = [False] * 4
-        self._sweep_plot_b64: dict[int, str] = {}
+        # Sweep plot data per channel: (voltages, currents) — used by the
+        # Plotly popup so zoom operates on the data, not a rasterized image.
+        self._sweep_plot_data: dict[int, tuple[list[float], list[float]]] = {}
 
         # Calib tab widgets
         self._cal_r1k_inputs = [None] * 4
@@ -185,9 +198,16 @@ class VoltageSourceApp(App):
         self._meter_samples: list[list[tuple[float, float]]] = [[] for _ in range(4)]
         self._meter_samples_lock = threading.Lock()
 
+        # Cached list of visible VISA resources — refreshed only when the
+        # meter count changes or the user hits ↻, so onchange doesn't
+        # trigger N synchronous list_resources() scans.
+        self._meter_devices_cache: list[str] = []
+
         # Log terminal
         self._log_text = None
         self._last_log_seq = -1
+        self._calib_log_text = None
+        self._last_calib_log_seq = -1
         self._css_injected = False
 
     # -----------------------------------------------------------------------
@@ -261,7 +281,9 @@ class VoltageSourceApp(App):
                     color="#444", flex=True, container=container)
         self._status_label = StyledLabel("●  Disconnected", "status_label",
                                          700, y, width=280, height=28,
-                                         color=_DOT_OFF, container=container)
+                                         color=_DOT_OFF, flex=True,
+                                         justify_content="flex-start",
+                                         container=container)
 
         self._connect_btn = StyledButton("Connect", "connect_btn",
                                          990, y - 6, width=140, height=40,
@@ -408,7 +430,7 @@ class VoltageSourceApp(App):
         StyledLabel("Range:", f"lbl_r_{ch}", 10, 13, width=70, height=24,
                     color="#444", flex=True, container=sweep_c)
         range_inp = StyledTextInput(f"range_{ch}", 85, 13, width=70, height=24,
-                                    text="1.0", container=sweep_c)
+                                    text="0.5", container=sweep_c)
         range_inp.style["box-sizing"] = "border-box"
         self._range_inputs[ch] = range_inp
         StyledLabel("V", f"lbl_r_u_{ch}", 162, 13, width=15, height=24,
@@ -458,20 +480,101 @@ class VoltageSourceApp(App):
         sweep_link.onclick.do(lambda em, ch=ch: self._on_sweep_link_click(ch))
         self._sweep_link_lbls[ch] = sweep_link
 
+        # "New sweep" indicator — blue dot right of the link. Turned on when a
+        # fresh sweep finishes, cleared once the user opens the link.
+        sweep_dot = StyledLabel("●", f"sweep_dot_{ch}",
+                                x + 205, y_base + 275, width=18, height=22,
+                                color="#007BFF", bold=True,
+                                flex=True, container=container)
+        sweep_dot.style.update({"display": "none", "font-size": "16px"})
+        self._sweep_dot_lbls[ch] = sweep_dot
+
     # =======================================================================
     # Calib tab
     # =======================================================================
     def _build_calib_panel(self, container):
-        # ---- Calibration values table ----
-        col_ch_x, col_r1k_x, col_rgain_x, col_vref_x, col_btn_x = 380, 470, 640, 810, 970
+        # ---- Meter section (top) ----
+        meter_y = 8
+        # "Meters:" label + count dropdown share the SAME left column as the
+        # meter rows below: label starts at x=20, dropdown at x=90 (same as
+        # each row's port-dropdown left edge).
+        StyledLabel("Meters:", "meters_lbl", 20, meter_y, width=65, height=24,
+                    color="#222", bold=True, flex=True, container=container)
+        self._meter_count_dd = StyledDropDown("0", "meter_count_dd",
+                                              90, meter_y, width=55, height=24,
+                                              container=container)
+        self._meter_count_dd.style["box-sizing"] = "border-box"
+        for n in ("1", "2", "3", "4"):
+            self._meter_count_dd.append(n)
+        self._meter_count_dd.onchange.do(
+            lambda em, v: self._on_meter_count_change(v))
+
+        # Container for dynamically-shown meter rows (narrower now so the
+        # calib log can sit to its right).
+        self._meter_rows_container = StyledContainer("meter_rows_c",
+                                                     20, meter_y + 30,
+                                                     720, 130,
+                                                     border=False,
+                                                     bg_color=False,
+                                                     container=container)
+        # Prebuild 4 rows but hide them all
+        for idx in range(4):
+            self._build_meter_row(self._meter_rows_container, idx)
+
+        # ---- Calib log (right of meter section) — no title, the dark
+        # ---- monospace panel is self-explanatory.
+        cal_log_x, cal_log_y, cal_log_w, cal_log_h = 760, meter_y, 470, 155
+        self._calib_log_text = gui.TextInput(singleline=False)
+        self._calib_log_text.css_position = "absolute"
+        self._calib_log_text.css_left = f"{cal_log_x}px"
+        self._calib_log_text.css_top = f"{cal_log_y}px"
+        self._calib_log_text.css_width = f"{cal_log_w}px"
+        self._calib_log_text.css_height = f"{cal_log_h}px"
+        self._calib_log_text.style.update({
+            "font-family": "monospace",
+            "font-size": "12px",
+            "background-color": "#1e1e1e",
+            "color": "#f0f0f0",
+            "border": "1px solid #444",
+            "border-radius": "4px",
+            "padding": "6px",
+            "overflow-y": "auto",
+            "white-space": "pre-wrap",
+            "box-sizing": "border-box",
+            "resize": "none",
+        })
+        container.append(self._calib_log_text, "calib_log_text")
+
+        # ---- Comparison plots (middle) ----
+        # Extra top gap separates plots from the meter/log section above.
+        plot_y0 = 200
+        plot_col_x = [5, 720]
+        plot_row_h = 250
+        # Larger inter-row gap so the row-1 "Ch 2"/"Ch 3" labels breathe away
+        # from the row-0 plot boxes above.
+        plot_row_gap = 55
+        plot_row_y = [plot_y0, plot_y0 + plot_row_h + plot_row_gap]
+        plot_w, plot_h = 700, plot_row_h
+
+        for ch in range(4):
+            col = ch % 2
+            row = ch // 2
+            self._build_calib_plot(container, ch,
+                                   plot_col_x[col], plot_row_y[row],
+                                   plot_w, plot_h)
+
+        # ---- Factory calibration table (bottom, left-aligned) ----
+        cal_y0 = plot_row_y[1] + plot_h + 55
+        col_ch_x, col_r1k_x, col_rgain_x, col_vref_x, col_btn_x = 20, 110, 260, 410, 570
         inp_w = 130
 
-        StyledLabel("Calibration values", "calib_title",
-                    col_ch_x, 5, width=300, height=22,
-                    color="#222", bold=True, flex=True, container=container)
+        StyledLabel("Factory calibration", "calib_title",
+                    col_ch_x, cal_y0, width=300, height=22,
+                    color="#222", bold=True, flex=True,
+                    justify_content="flex-start", container=container)
 
         def hdr(text, ident, xx, w):
-            StyledLabel(text, ident, xx, 30, width=w, height=22,
+            StyledLabel(text, ident, xx, cal_y0 + 32, width=w, height=22,
                         color="#555", bold=True, flex=True, container=container)
         hdr("Channel", "hdr_ch", col_ch_x, 70)
         hdr("R_1k (Ω)", "hdr_r1k", col_r1k_x, inp_w)
@@ -479,7 +582,7 @@ class VoltageSourceApp(App):
         hdr("DAC Vref (V)", "hdr_vref", col_vref_x, inp_w)
 
         for ch in range(4):
-            y = 60 + ch * 34
+            y = cal_y0 + 68 + ch * 38
             StyledLabel(f"Ch {ch}", f"cal_lbl_{ch}",
                         col_ch_x, y, width=70, height=26,
                         color="#000", bold=True,
@@ -494,63 +597,31 @@ class VoltageSourceApp(App):
                                       container=container)
                 inp.style["box-sizing"] = "border-box"
                 inp_arr[ch] = inp
-            btn = StyledButton("Recalibrate", f"recal_{ch}",
+            btn = StyledButton("Calibrate", f"recal_{ch}",
                                col_btn_x, y - 2, width=140, height=30,
                                normal_color="#28a745", press_color="#1e7e34",
                                container=container)
             btn.do_onclick(lambda ch=ch: self._on_recalibrate(ch))
             self._recal_btns[ch] = btn
 
-        # ---- Meter section (below table, above plots) ----
-        meter_y = 220
-        StyledLabel("Meters:", "meters_lbl", 20, meter_y, width=60, height=24,
-                    color="#222", bold=True, flex=True, container=container)
-        self._meter_count_dd = StyledDropDown("0", "meter_count_dd",
-                                              85, meter_y, width=50, height=24,
-                                              container=container)
-        for n in ("1", "2", "3", "4"):
-            self._meter_count_dd.append(n)
-        self._meter_count_dd.onchange.do(
-            lambda em, v: self._on_meter_count_change(v))
-
-        # Container for dynamically-shown meter rows
-        self._meter_rows_container = StyledContainer("meter_rows_c",
-                                                     20, meter_y + 30,
-                                                     1200, 130,
-                                                     border=False,
-                                                     bg_color=False,
-                                                     container=container)
-        # Prebuild 4 rows but hide them all
-        for idx in range(4):
-            self._build_meter_row(self._meter_rows_container, idx)
-
-        # ---- Comparison plots (below meters) ----
-        plot_y0 = 400
-        plot_col_x = [5, 720]
-        plot_row_y = [plot_y0, plot_y0 + 300]
-        plot_w, plot_h = 700, 280
-
-        for ch in range(4):
-            col = ch % 2
-            row = ch // 2
-            self._build_calib_plot(container, ch,
-                                   plot_col_x[col], plot_row_y[row],
-                                   plot_w, plot_h)
-
     def _build_meter_row(self, parent, idx: int):
         y = idx * 30
-        StyledLabel(f"Meter {idx}:", f"m_lbl_{idx}", 0, y, width=65, height=24,
-                    color="#222", bold=True, flex=True, container=parent)
+        row_h = 24
+        m_lbl = StyledLabel(f"Meter {idx}:", f"m_lbl_{idx}", 0, y, width=70,
+                            height=row_h, color="#222", bold=True, flex=True,
+                            container=parent)
         port_dd = StyledDropDown("-- select --", f"m_port_{idx}", 70, y,
-                                 width=340, height=24, container=parent)
+                                 width=340, height=row_h, container=parent)
         self._meter_port_dds[idx] = port_dd
 
-        StyledButton("↺", f"m_refresh_{idx}", 415, y, width=28, height=24,
-                     normal_color="#6c757d", press_color="#495057",
-                     font_size=80, container=parent).do_onclick(
-            lambda idx=idx: self._on_meter_refresh(idx))
+        refresh_btn = StyledButton("↺", f"m_refresh_{idx}", 415, y,
+                                    width=28, height=row_h,
+                                    normal_color="#6c757d", press_color="#495057",
+                                    font_size=80, container=parent)
+        refresh_btn.do_onclick(lambda idx=idx: self._on_meter_refresh(idx))
 
-        cbtn = StyledButton("Connect", f"m_conn_{idx}", 448, y, width=90, height=24,
+        cbtn = StyledButton("Connect", f"m_conn_{idx}", 448, y, width=90,
+                            height=row_h,
                             normal_color="#28a745", press_color="#1e7e34",
                             font_size=80, container=parent)
         cbtn.do_onclick(lambda idx=idx: self._on_meter_connect_toggle(idx))
@@ -558,14 +629,15 @@ class VoltageSourceApp(App):
 
         # Status is just a colored dot — the resource is already visible in port dd.
         stat = StyledLabel("●", f"m_stat_{idx}", 548, y,
-                           width=20, height=24, color=_DOT_OFF,
+                           width=20, height=row_h, color=_DOT_OFF,
                            bold=True, flex=True, container=parent)
         self._meter_status_lbls[idx] = stat
 
-        StyledLabel("Ch:", f"m_ch_lbl_{idx}", 600, y, width=25, height=24,
-                    color="#444", flex=True, container=parent)
-        ch_dd = StyledDropDown("0", f"m_ch_{idx}", 628, y, width=55, height=24,
-                               container=parent)
+        ch_lbl = StyledLabel("Ch:", f"m_ch_lbl_{idx}", 600, y, width=25,
+                             height=row_h, color="#444", flex=True,
+                             container=parent)
+        ch_dd = StyledDropDown("0", f"m_ch_{idx}", 628, y, width=55,
+                               height=row_h, container=parent)
         for n in ("1", "2", "3"):
             ch_dd.append(n)
         try:
@@ -574,6 +646,16 @@ class VoltageSourceApp(App):
             pass
         ch_dd.onchange.do(lambda em, v, idx=idx: self._on_meter_channel_change(idx, v))
         self._meter_channel_dds[idx] = ch_dd
+
+        # Force border-box so padding/border sit INSIDE the declared 24px
+        # height — otherwise dropdowns render ~30px tall and lift out of
+        # baseline with the labels/button/status dot next to them.
+        for w in (port_dd, refresh_btn, cbtn, ch_dd):
+            w.style["box-sizing"] = "border-box"
+        # Vertically center label text against the 24px row height so
+        # "Meter 0:" and "Ch:" share the same baseline as the dropdowns.
+        for lbl in (m_lbl, stat, ch_lbl):
+            lbl.style["line-height"] = f"{row_h}px"
 
         # Hide the whole row by default; also parent container we'll style children directly.
         for widget_getter in (
@@ -596,18 +678,36 @@ class VoltageSourceApp(App):
                     color="#000", bold=True, container=container)
         plot_c = StyledContainer(f"cplot_c_{ch}", x, y + 26, w, h,
                                  border=False, bg_color=False, container=container)
+        # Aggressively kill anything the framework's default stylesheet may
+        # add around the container/image — empty plots must render as blank
+        # space, not a gray outlined box.
+        for k, v in (("border", "0"), ("border-style", "none"),
+                      ("outline", "none"), ("box-shadow", "none"),
+                      ("background", "transparent")):
+            plot_c.style[k] = v
+
         img = gui.Image("")
         img.css_position = "absolute"
         img.css_left = "0px"
         img.css_top = "0px"
         img.css_width = f"{w - 5}px"
         img.css_height = f"{h - 5}px"
+        for k, v in (("border", "0"), ("border-style", "none"),
+                      ("outline", "none"), ("background", "transparent"),
+                      # Hide until a real image is set — an empty <img src="">
+                      # renders as a placeholder box in Chromium.
+                      ("display", "none")):
+            img.style[k] = v
         plot_c.append(img, f"cplot_img_{ch}")
         self._calib_plot_imgs[ch] = img
 
+        # Center the "no data" message vertically inside the plot area so
+        # the empty state looks intentional instead of like a broken image.
         no_data = StyledLabel("No comparison data yet", f"cplot_nd_{ch}",
-                              x + 5, y + 26, width=w - 10, height=22,
-                              color="#aaa", container=container)
+                              x + 5, y + 26 + (h // 2 - 11),
+                              width=w - 10, height=22,
+                              color="#aaa", flex=True,
+                              container=container)
         self._calib_no_data_lbls[ch] = no_data
 
     # =======================================================================
@@ -654,6 +754,10 @@ class VoltageSourceApp(App):
 
     def _graceful_disconnect(self):
         for ch in range(4):
+            try:
+                _vs.stop_steady_log(ch)
+            except Exception:
+                pass
             try:
                 _vs.send_off(ch)
             except Exception:
@@ -707,6 +811,7 @@ class VoltageSourceApp(App):
         mode = self._selected_modes[ch]
         if mode == "OFF":
             _vs.stop_sweep_log(ch)
+            _vs.stop_steady_log(ch)
             _vs.send_off(ch)
             _log(f"[Apply Ch {ch}] {ch},OFF")
             self._set_active_mode(ch, "OFF")
@@ -725,9 +830,10 @@ class VoltageSourceApp(App):
                 dur = float(self._duration_inputs[ch].get_value() or "10")
             except ValueError:
                 dur = 10.0
-            time_unit = (self._time_unit_dds[ch].get_value()
-                         if self._timer_checkboxes[ch].get_value() else "Inf")
+            timer_on = bool(self._timer_checkboxes[ch].get_value())
+            time_unit = self._time_unit_dds[ch].get_value() if timer_on else "Inf"
             _vs.stop_sweep_log(ch)
+            _vs.stop_steady_log(ch)
             _vs.send_steady(ch, v, dur, time_unit)
             _log(f"[Apply Ch {ch}] {ch},STEADY,{v},{dur},{time_unit}")
             self._applied_voltages[ch] = v
@@ -737,6 +843,17 @@ class VoltageSourceApp(App):
                 for idx in range(4):
                     if self._meter_channel[idx] == ch:
                         self._meter_samples[idx].clear()
+
+            # Steady TXT log only when a timer is set AND at least one
+            # connected meter is assigned to this channel.
+            assigned_meters = [idx for idx in range(self._meter_count)
+                               if self._meter_channel[idx] == ch
+                               and _meter_connected(idx)]
+            if timer_on and assigned_meters:
+                dur_s = self._timer_duration_seconds(ch)
+                path = _vs.start_steady_log(ch, v, dur_s, assigned_meters)
+                if path:
+                    _log(f"[Apply Ch {ch}] Steady TXT → {path}")
             self._set_active_mode(ch, "STEADY")
             return
         if mode == "SWEEP":
@@ -752,16 +869,19 @@ class VoltageSourceApp(App):
                 self._range_inputs[ch].set_value(f"{r}")
             _vs.clear_channel_data(ch)
             self._sweep_active[ch] = False
-            self._sweep_plot_b64.pop(ch, None)
+            self._sweep_plot_data.pop(ch, None)
             self._sweep_link_lbls[ch].style["display"] = "none"
+            if self._sweep_dot_lbls[ch] is not None:
+                self._sweep_dot_lbls[ch].style["display"] = "none"
             path = _vs.start_sweep_log(ch)
             _vs.send_sweep(ch, r, step_mv)
             _log(f"[Apply Ch {ch}] {ch},SWEEP,{r},{step_mv}")
             if path:
-                _log(f"[Apply Ch {ch}] Sweep CSV → {path}")
+                _log(f"[Apply Ch {ch}] Sweep TXT → {path}")
             self._set_active_mode(ch, "SWEEP")
 
     def _on_stop(self, ch: int):
+        _vs.stop_steady_log(ch)
         _vs.send_off(ch)
         _log(f"[Stop Ch {ch}] sent {ch},OFF")
         self._set_active_mode(ch, "OFF")
@@ -796,47 +916,98 @@ class VoltageSourceApp(App):
             readout.style["display"] = "none"
 
     def _on_sweep_link_click(self, ch: int):
-        b64 = self._sweep_plot_b64.get(ch)
-        if not b64:
+        pair = self._sweep_plot_data.get(ch)
+        if not pair:
             return
-        # Interactive popup: wheel = zoom to cursor, drag = pan, dbl-click = reset
+        voltages, currents = pair
+        # Clear the "new sweep" indicator now that the user has opened it.
+        dot = self._sweep_dot_lbls[ch]
+        if dot is not None:
+            dot.style["display"] = "none"
+
+        # Real interactive plot via Plotly: wheel zoom targets the data
+        # (not a raster), box zoom by drag, no pan-on-drag, double-click
+        # resets. Zoom-out is clamped to the data extents (+5% pad) so the
+        # user can't drift into empty space. Requires internet access for
+        # the CDN script tag.
+        import json
+        color = _CH_COLORS[ch]
+        payload = {
+            "voltages": voltages,
+            "currents": currents,
+            "color": color,
+            "title": f"Ch {ch} sweep",
+        }
+        payload_json = json.dumps(payload)
+
         html = (
-            "<!doctype html><html><head><title>Ch " + str(ch) + " Sweep</title>"
-            "<style>"
-            "html,body{margin:0;height:100%;overflow:hidden;background:#f0f0f0;font-family:sans-serif;}"
-            "#viewer{position:absolute;inset:0;cursor:grab;}"
-            "#viewer.dragging{cursor:grabbing;}"
-            "#plot{position:absolute;left:0;top:0;transform-origin:0 0;user-select:none;-webkit-user-drag:none;}"
-            "#hint{position:fixed;left:8px;bottom:8px;padding:4px 8px;background:rgba(0,0,0,0.55);color:#fff;font-size:12px;border-radius:4px;pointer-events:none;}"
-            "</style></head>"
-            "<body><div id='viewer'>"
-            "<img id='plot' src='data:image/png;base64," + b64 + "'/>"
-            "</div>"
-            "<div id='hint'>wheel = zoom &middot; drag = pan &middot; dbl-click = reset</div>"
+            "<!doctype html><html><head><meta charset='utf-8'>"
+            f"<title>Ch {ch} Sweep</title>"
+            "<script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>"
+            "<style>html,body{margin:0;height:100%;background:#fff;font-family:sans-serif;}"
+            "#plot{width:100vw;height:100vh;}"
+            "#hint{position:fixed;left:8px;bottom:8px;padding:4px 8px;"
+            "background:rgba(0,0,0,0.55);color:#fff;font-size:12px;"
+            "border-radius:4px;pointer-events:none;}"
+            "</style></head><body>"
+            "<div id='plot'></div>"
+            "<div id='hint'>wheel = zoom into cursor &middot; drag = box zoom "
+            "&middot; dbl-click = reset</div>"
             "<script>"
-            "(function(){"
-            "var img=document.getElementById('plot'),v=document.getElementById('viewer');"
-            "var s=1,tx=0,ty=0,drag=false,sx=0,sy=0;"
-            "function fit(){var r=v.getBoundingClientRect();var iw=img.naturalWidth,ih=img.naturalHeight;"
-            "if(!iw||!ih)return;s=Math.min(r.width/iw,r.height/ih);"
-            "tx=(r.width-iw*s)/2;ty=(r.height-ih*s)/2;apply();}"
-            "function apply(){img.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';}"
-            "img.onload=fit;window.addEventListener('resize',fit);"
-            "v.addEventListener('wheel',function(e){e.preventDefault();var d=-e.deltaY*0.0015;var os=s;s=Math.max(0.1,Math.min(20,s*(1+d)));"
-            "var r=v.getBoundingClientRect();var mx=e.clientX-r.left,my=e.clientY-r.top;"
-            "tx=mx-(mx-tx)*(s/os);ty=my-(my-ty)*(s/os);apply();},{passive:false});"
-            "v.addEventListener('mousedown',function(e){drag=true;sx=e.clientX-tx;sy=e.clientY-ty;v.classList.add('dragging');});"
-            "window.addEventListener('mousemove',function(e){if(!drag)return;tx=e.clientX-sx;ty=e.clientY-sy;apply();});"
-            "window.addEventListener('mouseup',function(){drag=false;v.classList.remove('dragging');});"
-            "v.addEventListener('dblclick',fit);"
-            "})();"
+            f"var P={payload_json};"
+            "var xMin=Math.min.apply(null,P.voltages);"
+            "var xMax=Math.max.apply(null,P.voltages);"
+            "var yMin=Math.min.apply(null,P.currents);"
+            "var yMax=Math.max.apply(null,P.currents);"
+            "var xPad=(xMax-xMin)*0.05||0.05;"
+            "var yPad=(yMax-yMin)*0.05||0.05;"
+            "var X0=xMin-xPad,X1=xMax+xPad;"
+            "var Y0=yMin-yPad,Y1=yMax+yPad;"
+            "function draw(){"
+            "var el=document.getElementById('plot');"
+            "Plotly.newPlot(el,[{"
+            "x:P.voltages,y:P.currents,type:'scattergl',mode:'lines',"
+            "line:{color:P.color,width:1.6},name:P.title"
+            "}],{"
+            "title:P.title,margin:{l:70,r:30,t:50,b:60},"
+            "xaxis:{title:'Voltage (V)',showgrid:true,zeroline:false,"
+            "gridcolor:'#ddd',range:[X0,X1],autorange:false},"
+            "yaxis:{title:'Current (µA)',showgrid:true,zeroline:false,"
+            "gridcolor:'#ddd',range:[Y0,Y1],autorange:false},"
+            "dragmode:'zoom',hovermode:'closest'"
+            "},{scrollZoom:true,displayModeBar:true,responsive:true,"
+            "displaylogo:false});"
+            # Clamp any zoom-out beyond the data extents back into bounds.
+            "var clamping=false;"
+            "el.on('plotly_relayout',function(ed){"
+            "if(clamping)return;"
+            "var xr=el.layout.xaxis.range,yr=el.layout.yaxis.range;"
+            "var upd={},dirty=false;"
+            "if(xr[0]<X0-1e-9){upd['xaxis.range[0]']=X0;dirty=true;}"
+            "if(xr[1]>X1+1e-9){upd['xaxis.range[1]']=X1;dirty=true;}"
+            "if(yr[0]<Y0-1e-9){upd['yaxis.range[0]']=Y0;dirty=true;}"
+            "if(yr[1]>Y1+1e-9){upd['yaxis.range[1]']=Y1;dirty=true;}"
+            "if(ed['xaxis.autorange']===true||ed['yaxis.autorange']===true){"
+            "upd['xaxis.range']=[X0,X1];upd['yaxis.range']=[Y0,Y1];"
+            "upd['xaxis.autorange']=false;upd['yaxis.autorange']=false;"
+            "dirty=true;}"
+            "if(dirty){clamping=true;"
+            "Plotly.relayout(el,upd).then(function(){clamping=false;});}"
+            "});"
+            "}"
+            "if(window.Plotly){draw();}else{"
+            "var poll=setInterval(function(){if(window.Plotly){"
+            "clearInterval(poll);draw();}},50);}"
+            "window.addEventListener('resize',function(){"
+            "if(window.Plotly)Plotly.Plots.resize(document.getElementById('plot'));"
+            "});"
             "</script></body></html>"
         )
-        # Escape backslashes and single-quotes for JS string literal, then base64
-        # to sidestep any embedded quotes/newlines inside the SVG data URI.
         html_b64 = base64.b64encode(html.encode("utf-8")).decode("ascii")
+        # Open in an appropriately-sized popup, not a fullscreen tab.
         js = (
-            "var w=window.open('','_blank');"
+            "var w=window.open('','_blank',"
+            "'width=1000,height=650,menubar=no,toolbar=no,location=no,status=no');"
             "if(w){"
             "w.document.open();"
             "w.document.write(atob('" + html_b64 + "'));"
@@ -850,17 +1021,18 @@ class VoltageSourceApp(App):
     # =======================================================================
     def _on_recalibrate(self, ch: int):
         if not _vs.is_connected:
-            _log(f"[Recalibrate Ch {ch}] Not connected")
+            _log(f"[Recalibrate Ch {ch}] Not connected", calib=True)
             return
         try:
             r1k = float((self._cal_r1k_inputs[ch].get_value() or "").strip())
             rg = float((self._cal_rgain_inputs[ch].get_value() or "").strip())
             vref = float((self._cal_vref_inputs[ch].get_value() or "").strip())
         except (ValueError, AttributeError) as e:
-            _log(f"[Recalibrate Ch {ch}] Invalid input: {e}")
+            _log(f"[Recalibrate Ch {ch}] Invalid input: {e}", calib=True)
             return
         _vs.send_calibration(ch, r1k, rg, vref)
-        _log(f"[Recalibrate Ch {ch}] sent {ch},CALIBRATION,{r1k},{rg},{vref}")
+        _log(f"[Recalibrate Ch {ch}] R_1k={r1k} R_gain={rg} Vref={vref}",
+             calib=True)
 
     def _on_meter_count_change(self, val):
         try:
@@ -869,6 +1041,16 @@ class VoltageSourceApp(App):
             n = 0
         n = _clamp(n, 0, 4)
         self._meter_count = n
+
+        # One VISA scan, reused for every newly-visible row. Without this,
+        # each row would trigger its own ~100–500 ms pyvisa.list_resources()
+        # call on the WebSocket handler thread, freezing the dropdown until
+        # they all return.
+        need_scan = any(idx < n and self._meter_port_dds[idx] is not None
+                        for idx in range(4))
+        if need_scan:
+            self._refresh_meter_devices_cache()
+
         for idx in range(4):
             visible = idx < n
             display = "block" if visible else "none"
@@ -881,17 +1063,28 @@ class VoltageSourceApp(App):
                 if w is not None:
                     w.style["display"] = display
             if visible and self._meter_port_dds[idx] is not None:
-                self._populate_meter_ports(idx)
+                self._populate_meter_ports(idx, use_cache=True)
             if not visible and _meter_connected(idx):
                 # Auto-disconnect meters that are now hidden
                 self._disconnect_meter(idx)
 
-    def _populate_meter_ports(self, idx: int):
+    def _refresh_meter_devices_cache(self):
         try:
-            resources = ScpiMeterController.list_devices()
+            self._meter_devices_cache = ScpiMeterController.list_devices()
         except Exception as e:
-            _log(f"[Meter {idx}] VISA list error: {e}")
-            resources = []
+            _log(f"[Meter] VISA list error: {e}")
+            self._meter_devices_cache = []
+
+    def _populate_meter_ports(self, idx: int, use_cache: bool = False):
+        if use_cache:
+            resources = list(self._meter_devices_cache)
+        else:
+            try:
+                resources = ScpiMeterController.list_devices()
+            except Exception as e:
+                _log(f"[Meter {idx}] VISA list error: {e}")
+                resources = []
+            self._meter_devices_cache = list(resources)
         dd = self._meter_port_dds[idx]
         dd.empty()
         if not resources:
@@ -905,7 +1098,8 @@ class VoltageSourceApp(App):
             pass
 
     def _on_meter_refresh(self, idx: int):
-        self._populate_meter_ports(idx)
+        # Explicit refresh — always re-scan and update the cache.
+        self._populate_meter_ports(idx, use_cache=False)
 
     def _on_meter_connect_toggle(self, idx: int):
         if _meter_connected(idx):
@@ -914,19 +1108,19 @@ class VoltageSourceApp(App):
         dd = self._meter_port_dds[idx]
         resource = (dd.get_value() or "").strip()
         if not resource or resource.startswith("No devices"):
-            _log(f"[Meter {idx}] No device selected")
+            _log(f"[Meter {idx}] No device selected", calib=True)
             return
         m = ScpiMeterController()
         try:
             ok = m.connect(resource)
         except Exception as e:
-            _log(f"[Meter {idx}] Connect error: {e}")
+            _log(f"[Meter {idx}] Connect error: {e}", calib=True)
             return
         if not ok:
-            _log(f"[Meter {idx}] Connect failed on {resource}")
+            _log(f"[Meter {idx}] Connect failed on {resource}", calib=True)
             return
         _meters[idx] = m
-        _log(f"[Meter {idx}] Connected {resource}")
+        _log(f"[Meter {idx}] Connected {resource}", calib=True)
         # Start poller thread
         stop = threading.Event()
         self._meter_poll_stops[idx] = stop
@@ -951,7 +1145,7 @@ class VoltageSourceApp(App):
         _meters[idx] = None
         with self._meter_samples_lock:
             self._meter_samples[idx].clear()
-        _log(f"[Meter {idx}] Disconnected")
+        _log(f"[Meter {idx}] Disconnected", calib=True)
 
     def _on_meter_channel_change(self, idx: int, val):
         try:
@@ -990,6 +1184,10 @@ class VoltageSourceApp(App):
                 cutoff = t - _ROLLING_WINDOW_S
                 while buf and buf[0][0] < cutoff:
                     buf.pop(0)
+            # If a steady TXT log is currently open for this channel, append
+            # the meter sample with the applied voltage as reference.
+            _vs.write_steady_row(ch, f"meter{idx}",
+                                 self._applied_voltages[ch], i_uA)
             if stop.wait(_METER_POLL_S):
                 return
 
@@ -1131,41 +1329,33 @@ class VoltageSourceApp(App):
                 f"setTimeout(function(){{var e=document.getElementById('{eid}');"
                 f"if(e)e.scrollTop=e.scrollHeight;}},30);")
 
+        # Calib-filtered log (meter connect + recalibration only)
+        if (_calib_log_seq != self._last_calib_log_seq
+                and self._calib_log_text is not None):
+            self._calib_log_text.set_text("\n".join(_calib_log_lines))
+            self._last_calib_log_seq = _calib_log_seq
+            eid = self._calib_log_text.identifier
+            self.execute_javascript(
+                f"setTimeout(function(){{var e=document.getElementById('{eid}');"
+                f"if(e)e.scrollTop=e.scrollHeight;}},30);")
+
     # =======================================================================
     # Plot rendering
     # =======================================================================
     def _render_sweep_plot(self, ch: int, data):
+        """Cache raw sweep data so the Plotly popup can zoom into the plot
+        (not scale a raster). Also toggles the 'new sweep' blue dot on."""
         if not data:
-            return
-        try:
-            from matplotlib.figure import Figure
-            from matplotlib.backends.backend_agg import FigureCanvasAgg
-            from matplotlib.ticker import AutoMinorLocator, MaxNLocator
-        except Exception as e:
-            _log(f"[Sweep plot Ch {ch}] matplotlib import failed: {e}")
             return
         voltages = [d.voltage for d in data]
         currents = [d.current for d in data]
-        # 150 DPI (up from 100) so browser zoom stays crisp
-        fig = Figure(figsize=(8.0, 5.0), dpi=150)
-        canvas = FigureCanvasAgg(fig)
-        ax = fig.add_subplot(111)
-        ax.plot(voltages, currents, color=_CH_COLORS[ch], linewidth=1.4)
-        ax.set_title(f"Ch {ch} sweep")
-        ax.set_xlabel("Voltage (V)")
-        ax.set_ylabel("Current (µA)")
-        ax.grid(True, linestyle=":", alpha=0.5)
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.yaxis.set_minor_locator(AutoMinorLocator())
-        ax.xaxis.set_major_locator(MaxNLocator(nbins=8))
-        fig.tight_layout()
-        buf = io.BytesIO()
-        canvas.print_png(buf)
-        b64 = base64.b64encode(buf.getvalue()).decode("ascii")
-        self._sweep_plot_b64[ch] = b64
+        self._sweep_plot_data[ch] = (voltages, currents)
         link = self._sweep_link_lbls[ch]
         if link is not None:
             link.style["display"] = "block"
+        dot = self._sweep_dot_lbls[ch]
+        if dot is not None:
+            dot.style["display"] = "inline-block"
 
     def _render_calib_plot(self, ch: int):
         pcb = list(self._pcb_rolling[ch])
@@ -1180,20 +1370,24 @@ class VoltageSourceApp(App):
                 self._calib_no_data_lbls[ch].style["display"] = "block"
             if self._calib_plot_imgs[ch] is not None:
                 self._calib_plot_imgs[ch].set_image("")
+                self._calib_plot_imgs[ch].style["display"] = "none"
             return
 
         try:
             from matplotlib.figure import Figure
             from matplotlib.backends.backend_agg import FigureCanvasAgg
-            from matplotlib.ticker import AutoMinorLocator
+            from matplotlib.ticker import AutoMinorLocator, MultipleLocator
         except Exception as e:
             _log(f"[Calib plot Ch {ch}] matplotlib import failed: {e}")
             return
 
         # Shared t0 = earliest sample across all series
         all_times = [t for t, _ in pcb]
+        all_ys: list[float] = []
         for _, ds in meter_datasets:
             all_times.extend(t for t, _ in ds)
+            all_ys.extend(y for _, y in ds)
+        all_ys.extend(y for _, y in pcb)
         if not all_times:
             return
         t0 = min(all_times)
@@ -1214,10 +1408,34 @@ class VoltageSourceApp(App):
                     label=f"Meter {idx}")
         ax.set_xlabel("Time (s)")
         ax.set_ylabel("Current (µA)")
-        ax.grid(True, linestyle=":", alpha=0.5)
+
+        # Adaptive y-limits + grid density. A fixed 0.1 µA locator was
+        # producing hundreds of ticks whenever data spanned more than a few
+        # µA — matplotlib then dropped tick labels and the grid entirely.
+        # Instead we pick the finest step whose tick count stays readable.
+        if all_ys:
+            ymin, ymax = min(all_ys), max(all_ys)
+            span = max(ymax - ymin, 0.5)  # enforce a visible baseline span
+            pad = span * 0.15
+            y_lo, y_hi = ymin - pad, ymax + pad
+            ax.set_ylim(y_lo, y_hi)
+            view = y_hi - y_lo
+            if view < 1.5:
+                major = 0.1
+            elif view < 6:
+                major = 0.5
+            elif view < 30:
+                major = 1.0
+            elif view < 150:
+                major = 5.0
+            else:
+                major = None
+            if major is not None:
+                ax.yaxis.set_major_locator(MultipleLocator(major))
+                ax.yaxis.set_minor_locator(MultipleLocator(major / 5))
         ax.xaxis.set_minor_locator(AutoMinorLocator())
-        # Pad y-axis so a nearly-flat line sits closer to center of the plot.
-        ax.margins(y=0.5)
+        ax.grid(True, which="major", linestyle=":", alpha=0.6)
+        ax.grid(True, which="minor", axis="y", linestyle=":", alpha=0.25)
         ax.legend(fontsize=8, loc="best")
         fig.tight_layout()
 
@@ -1226,6 +1444,7 @@ class VoltageSourceApp(App):
         b64 = base64.b64encode(buf.getvalue()).decode("ascii")
         if self._calib_plot_imgs[ch] is not None:
             self._calib_plot_imgs[ch].set_image(f"data:image/png;base64,{b64}")
+            self._calib_plot_imgs[ch].style["display"] = "block"
         if self._calib_no_data_lbls[ch] is not None:
             self._calib_no_data_lbls[ch].style["display"] = "none"
 
