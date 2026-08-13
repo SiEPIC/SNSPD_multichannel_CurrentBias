@@ -7,8 +7,5 @@ Firmware/sdkconfig.old
 
 __pycache__/
 *.pyc
-GUI/controller/__pycache__/*
-GUI/layout/__pycache__/*
 output/
 .venv/
-
