@@ -74,7 +74,6 @@ sudo apt install libusb-1.0-0
 cd GUI/ 
 
 uv sync 
-source .venv/bin/activate 
 ```
 
 ### Windows:
@@ -83,12 +82,11 @@ source .venv/bin/activate
 cd \GUI
 
 uv sync 
-source .venv\Scripts\activate
 ```
 
 ### 3. Launch GUI
 ```bash
-python3 main.py
+uv run gui
 ```
 GUI runs locally as an html file \
 Default URL: `http://127.0.0.1:8006`

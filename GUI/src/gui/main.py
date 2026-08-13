@@ -1642,7 +1642,7 @@ def _install_shutdown_hooks():
             pass
 
 
-def main():
+def run():
     try:
         _install_shutdown_hooks()
         cfg = get_window_config("voltage_source")
@@ -1666,4 +1666,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()
