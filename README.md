@@ -101,6 +101,11 @@ Default URL: `http://127.0.0.1:8006`
 
 ## Initial Calibration
 
+For each channel,
+
+- 4-wire sense measurement on $1000k \Omega$ and $401 \Omega$ resistors
+- 2.5V reference voltage measurement 
+
 ## ODR Settings
 
 ## Steady Mode 

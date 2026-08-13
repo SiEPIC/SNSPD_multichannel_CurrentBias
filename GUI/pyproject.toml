@@ -2,7 +2,6 @@
 name = "gui"
 version = "0.1.0"
 description = "Add your description here"
-readme = "README.md"
 authors = [
     { name = "ta1_k", email = "t.kamei0716@gmail.com" }
 ]
@@ -38,7 +37,7 @@ dependencies = [
 ]
 
 [project.scripts]
-gui = "gui:main"
+gui = "gui.main:main"
 
 [build-system]
 requires = ["uv_build>=0.12.3,<0.13.0"]
