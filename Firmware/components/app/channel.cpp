@@ -34,6 +34,7 @@ bool Channel::init(uint8_t id, ad717x_dev* adc_dev, ad5761r_dev* dac_dev){
   dac_dev_ = dac_dev;
 
   current_sense_data_ = load_calibration();
+  send_calib_data();
   ad5761r_write_update_dac_register(dac_dev_, voltage_to_bin(0.0f));
 
   ad717x_set_channel_status(adc_dev_, channel_id, true);
@@ -105,6 +106,7 @@ void Channel::steady_run(){
     ESP_LOGI(TAG, "Ch%d steady timer done", channel_id);
     stop();
   } 
+
 }
 
 
@@ -136,7 +138,7 @@ void Channel::sweep_run(){
         else{
           sweep_.phase_ = SweepPhase::THIRD;
         }
-        // No break here for same reason
+        // No break here for the same reason
 
       case SweepPhase::THIRD:
 
@@ -346,21 +348,28 @@ void Channel::set_calibration(const UserCmd& cmd){
   float r1k = cmd.param.Cal.R_1k;
   float rg = cmd.param.Cal.R_gain;
   float vref = cmd.param.Cal.dac_vref;
+
   
+  if(isnan(r1k) && isnan(rg) && isnan(vref)) {
+    send_calib_data(); // If all is NAN, it will be used to send current current sense vlaues
+    return;
+  }
+
   if(isnan(r1k) || isnan(rg) || isnan(vref)) {
+    // If it's not all NAN, then it means user forgot to input one field
     ESP_LOGE(TAG, "All values must be filled for a channel calibration");
     return;
   }
 
-  // if (r1k < R_1K_DEFAULT * (1.0 - R_1K_TOL) || r1k > R_1K_DEFAULT * (1.0 + R_1K_TOL)){
-  //   ESP_LOGE(TAG, "1k resistor value is not within %.2f%% tolerance", R_1K_TOL * 100);
-  //   return;
-  // }
-  //
-  // else if (rg < R_GAIN_DEFAULT * (1.0 - R_GAIN_TOL) || rg > R_GAIN_DEFAULT * (1.0 + R_GAIN_TOL)){
-  //   ESP_LOGE(TAG, "Op-amp gain resistor value is not within %.2f%% tolerance", R_GAIN_TOL * 100);
-  //   return;
-  // }
+  if (r1k < R_1K_DEFAULT * (1.0 - R_1K_TOL) || r1k > R_1K_DEFAULT * (1.0 + R_1K_TOL)){
+    ESP_LOGE(TAG, "1k resistor value is not within %.2f%% tolerance", R_1K_TOL * 100);
+    return;
+  }
+
+  else if (rg < R_GAIN_DEFAULT * (1.0 - R_GAIN_TOL) || rg > R_GAIN_DEFAULT * (1.0 + R_GAIN_TOL)){
+    ESP_LOGE(TAG, "Op-amp gain resistor value is not within %.2f%% tolerance", R_GAIN_TOL * 100);
+    return;
+  }
 
   else if (vref < DAC_VREF_DEFAULT * (1.0 - DAC_VREF_TOL) 
            || vref > DAC_VREF_DEFAULT * (1.0 + DAC_VREF_TOL)){
@@ -369,6 +378,7 @@ void Channel::set_calibration(const UserCmd& cmd){
   }
 
   current_sense_data_ = {.r_1k = r1k, .r_gain = rg, .dac_vref = vref};
+  send_calib_data();
   ESP_LOGI(TAG, "set vref: %.5f", current_sense_data_.dac_vref);
 
   char nvs_key[16];
@@ -399,4 +409,18 @@ void Channel::set_calibration(const UserCmd& cmd){
   nvs_close(handle);
   ESP_LOGI(TAG, "Calibration successful");
 }
+
+void Channel::send_calib_data(void){
+
+  CalibData calib = {
+    .channel_id = channel_id, 
+    .r_1k = current_sense_data_.r_1k,
+    .r_gain = current_sense_data_.r_gain,
+    .dac_vref = current_sense_data_.dac_vref
+  };
+
+  xQueueSend(calib_data_queue, &calib, 0);
+}
+
+
 

@@ -5,6 +5,7 @@ Firmware/.DS_Store
 Firmware/sdkconfig
 Firmware/sdkconfig.old
 
+GUI/__pycache__
 GUI/controller/__pycache__
 GUI/layout/__pycache__
 GUI/output

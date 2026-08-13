@@ -157,6 +157,8 @@ class Channel{
 
     void set_calibration(const UserCmd& cmd);
 
+    void send_calib_data(void);
+
     void set_odr(float odr);
 
     void set_sweep_config(const UserCmd& cmd);

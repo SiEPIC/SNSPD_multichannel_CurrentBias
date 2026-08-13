@@ -97,19 +97,26 @@ struct DataLog{
   float time;
 };
 
+struct CalibData{
+  uint8_t channel_id;
+  float r_1k;
+  float r_gain;
+  float dac_vref;
+};
 
-/** @brief Queue: Channel → log_task. Depth 4, holds DataLog by value. */
 extern QueueHandle_t data_queue;
-/** @brief Queue: user_cmd_task → Coordinator. Depth 4, holds UserCmd by value. */
 extern QueueHandle_t user_cmd_queue;
-/** @brief Reserved for future event routing; currently unused. */
 extern QueueHandle_t event_queue;
+extern QueueHandle_t calib_data_queue;
 
 /**
  * @brief FreeRTOS task: drain data_queue and print each record as CSV to stdout.
  * @param arg Unused; required by FreeRTOS task signature.
  */
 void log_task (void* arg);
+
+void send_calibdata_task (void* arg);
+
 
 /**
  * @brief FreeRTOS task: read comma-delimited commands from stdin, parse, and enqueue.

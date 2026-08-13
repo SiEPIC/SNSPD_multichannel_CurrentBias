@@ -30,6 +30,16 @@ class VoltageSourceController:
         # Wired by the GUI so firmware printf/ESP_LOGx output is visible.
         self.log_callback = None
 
+        # Optional callback invoked whenever the firmware sends a
+        # "calib, channel_id, r_1k, r_gain, dac_vref" line — used by the GUI
+        # to keep the calibration input fields in sync with what the ESP
+        # actually has stored (including the "all-NaN echo" reply and
+        # boot-time sends from every channel).
+        # Signature:
+        #     (channel_id: int, r_1k: float, r_gain: float,
+        #      dac_vref: float) -> None
+        self.calib_callback = None
+
         self._data_buffers: dict[int, list] = {i: [] for i in range(4)}
         self._data_lock = threading.Lock()
         self._new_data: dict[int, bool] = {i: False for i in range(4)}
@@ -43,12 +53,16 @@ class VoltageSourceController:
         self._sweep_lock = threading.Lock()
 
         # Per-channel STEADY TXT logs (opened by the GUI when the user starts
-        # a steady run with a timer AND at least one meter connected). PCB
-        # samples are appended here from the reader thread; the GUI appends
-        # meter samples.
+        # a steady run with a timer AND at least one meter connected).
+        # One row is written per meter poll — dedicated column per assigned
+        # meter — so the file is a proper time series against meter cadence.
         self._steady_files: dict[int, object] = {}
         self._steady_writers: dict[int, object] = {}
         self._steady_paths: dict[int, str] = {}
+        self._steady_meter_indices: dict[int, list[int]] = {}
+        # Wall-clock t0 of each open steady log; row timestamps are written
+        # as elapsed seconds against this so the first row is 0.000.
+        self._steady_t0: dict[int, float] = {}
         self._steady_lock = threading.Lock()
 
         self._reading = False
@@ -295,26 +309,38 @@ class VoltageSourceController:
 
     # ---- STEADY txt log ---------------------------------------------------
     def start_steady_log(self, channel_id: int, applied_voltage: float,
-                          duration_s: float | None, meter_indices: list[int]) -> str:
+                          duration_s: float | None,
+                          meter_indices: list[int]) -> str:
         """Open a per-channel TXT log for a steady run.
 
-        Columns: timestamp_epoch, source, voltage_V, current_uA.
-        `source` is "pcb" or "meter{idx}" so both streams can coexist.
+        Columns (tab-separated):
+            time_s, voltage_V, pcb_current_uA,
+            meter{idx0}_current_uA, meter{idx1}_current_uA, ...
+
+        ``time_s`` is elapsed seconds since the log opened (first row = 0.0).
+
+        One row is written per meter poll (via ``write_steady_row``). The
+        meter that fired gets its column populated; the other meter columns
+        on that row are left blank.
         Returns "" on failure.
         """
         os.makedirs(self._sweep_dir, exist_ok=True)
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         path = os.path.join(self._sweep_dir,
                             f"vs_ch{channel_id}_steady_{timestamp}.txt")
+        indices = list(meter_indices)
         try:
             f = open(path, "w", newline="")
             dur_str = "inf" if duration_s is None else f"{duration_s:.1f}s"
             f.write(f"# Ch {channel_id} steady log\n")
             f.write(f"# applied_voltage_V\t{applied_voltage:.6f}\n")
             f.write(f"# duration\t{dur_str}\n")
-            f.write(f"# meters\t{','.join(str(i) for i in meter_indices) or 'none'}\n")
+            f.write(f"# meters\t{','.join(str(i) for i in indices) or 'none'}\n")
             w = csv.writer(f, delimiter="\t")
-            w.writerow(["timestamp_epoch", "source", "voltage_V", "current_uA"])
+            header = ["time_s", "voltage_V", "pcb_current_uA"]
+            for idx in indices:
+                header.append(f"meter{idx}_current_uA")
+            w.writerow(header)
             f.flush()
         except Exception as e:
             print(f"[VoltageSource] Failed to open steady log Ch{channel_id}: {e}")
@@ -325,6 +351,8 @@ class VoltageSourceController:
             self._steady_files[channel_id] = f
             self._steady_writers[channel_id] = w
             self._steady_paths[channel_id] = path
+            self._steady_meter_indices[channel_id] = indices
+            self._steady_t0[channel_id] = time.time()
         print(f"[VoltageSource] Ch{channel_id} steady log → {path}")
         return path
 
@@ -336,6 +364,8 @@ class VoltageSourceController:
         f = self._steady_files.pop(channel_id, None)
         self._steady_writers.pop(channel_id, None)
         self._steady_paths.pop(channel_id, None)
+        self._steady_meter_indices.pop(channel_id, None)
+        self._steady_t0.pop(channel_id, None)
         if f is not None:
             try:
                 f.close()
@@ -346,18 +376,36 @@ class VoltageSourceController:
         with self._steady_lock:
             return self._steady_paths.get(channel_id, "")
 
-    def write_steady_row(self, channel_id: int, source: str,
-                          voltage_V: float, current_uA: float):
-        """Append one row to the channel's steady log if it's open."""
+    def write_steady_row(self, channel_id: int, timestamp: float,
+                          voltage_V: float, pcb_current_uA: float | None,
+                          meter_idx: int, meter_current_uA: float):
+        """Append one meter-poll row to the channel's steady log if open.
+
+        ``timestamp`` is a wall-clock epoch value; the row's ``time_s``
+        column is written as elapsed seconds since the log opened, so the
+        first row is 0.000 and subsequent rows step forward in seconds.
+
+        Only the polling meter's column is populated on this row; the other
+        meters' columns are left blank so the reader can tell which meter
+        the sample came from without parsing an extra column.
+        """
         with self._steady_lock:
             w = self._steady_writers.get(channel_id)
             f = self._steady_files.get(channel_id)
+            indices = self._steady_meter_indices.get(channel_id, [])
+            t0 = self._steady_t0.get(channel_id, timestamp)
             if w is None or f is None:
                 return
             try:
-                v_str = "" if voltage_V is None else f"{voltage_V:.6f}"
-                w.writerow([f"{time.time():.3f}", source, v_str,
-                            f"{current_uA:.6f}"])
+                elapsed = max(0.0, timestamp - t0)
+                row = [
+                    f"{elapsed:.3f}",
+                    f"{voltage_V:.6f}",
+                    "" if pcb_current_uA is None else f"{pcb_current_uA:.6f}",
+                ]
+                for idx in indices:
+                    row.append(f"{meter_current_uA:.6f}" if idx == meter_idx else "")
+                w.writerow(row)
                 f.flush()
             except Exception:
                 pass
@@ -503,6 +551,10 @@ class VoltageSourceController:
             if not raw:
                 continue
             line = raw.decode(errors="replace").strip()
+            if line.startswith("calib,"):
+                # Firmware echo: "calib, r_1k, r_gain, dac_vref"
+                self._handle_calib_line(line)
+                continue
             if not line.startswith("data,"):
                 if line and self.log_callback is not None:
                     try:
@@ -534,7 +586,9 @@ class VoltageSourceController:
                     self._data_buffers[channel_id].append(entry)
                     self._new_data[channel_id] = True
 
-            # Per-channel sweep log (mode 0 = SWEEP)
+            # Per-channel sweep log (mode 0 = SWEEP). Steady log is written
+            # only when a meter polls (see GUI meter poll worker), so nothing
+            # to log here for mode 1.
             if mode == 0:
                 with self._sweep_lock:
                     w = self._sweep_writers.get(channel_id)
@@ -546,18 +600,31 @@ class VoltageSourceController:
                         except Exception:
                             pass
 
-            # Per-channel steady log (mode 1 = STEADY)
-            elif mode == 1:
-                with self._steady_lock:
-                    w = self._steady_writers.get(channel_id)
-                    f = self._steady_files.get(channel_id)
-                    if w is not None and f is not None:
-                        try:
-                            w.writerow([f"{time.time():.3f}", "pcb",
-                                        f"{voltage:.6f}", f"{current:.6f}"])
-                            f.flush()
-                        except Exception:
-                            pass
+    def _handle_calib_line(self, line: str):
+        """Parse a firmware calibration echo and hand it to the GUI callback.
+
+        Line format: ``calib, %d, %.4f, %.4f, %.5f``
+        (channel_id, r_1k, r_gain, dac_vref).
+        The firmware sends this on boot for every channel, after a successful
+        set_calibration(), and when the GUI requests the stored values by
+        writing all-NaN.
+        """
+        parts = [p.strip() for p in line.split(",")]
+        if len(parts) < 5:
+            return
+        try:
+            channel_id = int(parts[1])
+            r_1k = float(parts[2])
+            r_gain = float(parts[3])
+            dac_vref = float(parts[4])
+        except ValueError:
+            return
+        cb = self.calib_callback
+        if cb is not None:
+            try:
+                cb(channel_id, r_1k, r_gain, dac_vref)
+            except Exception:
+                pass
 
     def has_new_data(self, channel_id: int) -> bool:
         """Return True if new data has arrived for this channel since last get."""

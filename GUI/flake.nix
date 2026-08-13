@@ -19,6 +19,7 @@
           ] ++ pkgs.lib.optional pkgs.stdenv.isLinux pkgs.gcc14.cc.lib;
 
           shellHook = ''
+          alias g='python3 main.py'
             ${pkgs.lib.optionalString pkgs.stdenv.isLinux ''
               export LD_LIBRARY_PATH=${pkgs.gcc14.cc.lib}/lib:${pkgs.libusb1.out}/lib:$LD_LIBRARY_PATH
             ''}

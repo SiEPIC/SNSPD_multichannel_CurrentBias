@@ -12,6 +12,7 @@ import signal
 import sys
 import threading
 import time
+import uuid
 
 import webview
 from remi import App, start
@@ -61,12 +62,20 @@ _CAL_R1K_DEF = "1000.0"
 _CAL_RGAIN_DEF = "401.0"
 _CAL_VREF_DEF = "2.5"
 
-_METER_POLL_S = 0.3          # seconds between meter samples
+_METER_POLL_S = 1.0          # seconds between meter samples (initial default)
+_METER_POLL_MIN_S = 0.05     # safety floor to avoid saturating VISA / meter
 _ROLLING_WINDOW_S = 60.0     # calib plot look-back window
 _PCB_LOG_INTERVAL = 0.05     # min seconds between PCB samples pushed to rolling buffer
 _CALIB_RENDER_HZ = 1.0
 
 _METER_OUTPUT_DIR = "output"
+
+# Unique per Python process. Rendered into every session and compared in
+# the browser's localStorage — if a browser tab is still open from a
+# previous Python process it holds stale widget IDs, so on WebSocket
+# reconnect we force it to reload rather than let event callbacks fail
+# with KeyError on runtimeInstances lookups.
+_BOOT_ID = uuid.uuid4().hex
 
 
 def _clamp(v, lo, hi):
@@ -127,6 +136,10 @@ class VoltageSourceApp(App):
     # -----------------------------------------------------------------------
     def main(self):
         self._init_state()
+        # Route firmware calib echoes back into the GUI so the input fields
+        # stay in sync with what the ESP has actually stored (including the
+        # all-NaN "read stored values" reply).
+        _vs.calib_callback = self._on_calib_received
         return self._build_ui()
 
     def _init_state(self):
@@ -182,11 +195,16 @@ class VoltageSourceApp(App):
         self._meter_status_lbls = [None] * 4
         self._meter_connect_btns = [None] * 4
         self._meter_channel_dds = [None] * 4
+        self._meter_poll_inputs = [None] * 4
         self._meter_count = 0
         self._meter_channel = [0, 1, 2, 3]     # default: meter i → channel i
         self._meter_was_connected = [False] * 4
         self._meter_poll_threads: list[threading.Thread | None] = [None] * 4
         self._meter_poll_stops: list[threading.Event | None] = [None] * 4
+        # Live-editable per-meter polling interval — the meter i worker
+        # re-reads self._meter_poll_s[i] each loop so edits take immediate
+        # effect without restarting the thread.
+        self._meter_poll_s: list[float] = [_METER_POLL_S] * 4
 
         self._calib_plot_imgs = [None] * 4
         self._calib_no_data_lbls = [None] * 4
@@ -209,6 +227,9 @@ class VoltageSourceApp(App):
         self._calib_log_text = None
         self._last_calib_log_seq = -1
         self._css_injected = False
+        # Boot-ID check runs once per session to force a browser reload if
+        # the session was carried over from a previous Python process.
+        self._boot_id_checked = False
 
     # -----------------------------------------------------------------------
     # Root UI
@@ -256,37 +277,38 @@ class VoltageSourceApp(App):
     def _build_ctrl_panel(self, container):
         # ---- ESP connection row (top) ----
         y = 12
-        StyledLabel("ESP:", "lbl_esp", 135, y, width=42, height=28,
-                    color="#444", flex=True, container=container)
+        StyledLabel("ESP:", "lbl_esp", 20, y, width=42, height=28,
+                    color="#444", flex=True,
+                    justify_content="flex-start", container=container)
 
         self._port_dd = StyledDropDown("-- select port --", "port_dd",
-                                       180, y, width=220, height=28,
+                                       65, y, width=220, height=28,
                                        container=container)
         self._populate_ports()
 
-        StyledButton("↺", "refresh_btn", 410, y, width=32, height=28,
+        StyledButton("↺", "refresh_btn", 295, y, width=32, height=28,
                      normal_color="#6c757d", press_color="#495057",
                      container=container).do_onclick(self._on_refresh_ports)
 
-        StyledLabel("Baud:", "lbl_baud", 465, y, width=42, height=28,
+        StyledLabel("Baud:", "lbl_baud", 350, y, width=42, height=28,
                     color="#444", flex=True, container=container)
         self._baud_dd = StyledDropDown("115200", "baud_dd",
-                                       510, y, width=100, height=28,
+                                       395, y, width=100, height=28,
                                        container=container)
         for b in ("9600", "115200", "230400", "460800", "921600"):
             if b != "115200":
                 self._baud_dd.append(b)
 
-        StyledLabel("Status:", "lbl_status_t", 640, y, width=52, height=28,
+        StyledLabel("Status:", "lbl_status_t", 525, y, width=52, height=28,
                     color="#444", flex=True, container=container)
         self._status_label = StyledLabel("●  Disconnected", "status_label",
-                                         700, y, width=280, height=28,
+                                         585, y, width=280, height=28,
                                          color=_DOT_OFF, flex=True,
                                          justify_content="flex-start",
                                          container=container)
 
         self._connect_btn = StyledButton("Connect", "connect_btn",
-                                         990, y - 6, width=140, height=40,
+                                         875, y - 6, width=140, height=40,
                                          normal_color="#28a745",
                                          press_color="#1e7e34",
                                          container=container)
@@ -509,11 +531,12 @@ class VoltageSourceApp(App):
         self._meter_count_dd.onchange.do(
             lambda em, v: self._on_meter_count_change(v))
 
-        # Container for dynamically-shown meter rows (narrower now so the
-        # calib log can sit to its right).
+        # Container for dynamically-shown meter rows. Widened so each row
+        # can carry its own "Poll: [_] s" input alongside the port/connect/ch
+        # controls; the calib log sits to its right.
         self._meter_rows_container = StyledContainer("meter_rows_c",
                                                      20, meter_y + 30,
-                                                     720, 130,
+                                                     820, 130,
                                                      border=False,
                                                      bg_color=False,
                                                      container=container)
@@ -522,8 +545,9 @@ class VoltageSourceApp(App):
             self._build_meter_row(self._meter_rows_container, idx)
 
         # ---- Calib log (right of meter section) — no title, the dark
-        # ---- monospace panel is self-explanatory.
-        cal_log_x, cal_log_y, cal_log_w, cal_log_h = 760, meter_y, 470, 155
+        # ---- monospace panel is self-explanatory. Shifted well right of
+        # ---- the meter rows so the two blocks read as separate columns.
+        cal_log_x, cal_log_y, cal_log_w, cal_log_h = 920, meter_y, 380, 155
         self._calib_log_text = gui.TextInput(singleline=False)
         self._calib_log_text.css_position = "absolute"
         self._calib_log_text.css_left = f"{cal_log_x}px"
@@ -647,14 +671,32 @@ class VoltageSourceApp(App):
         ch_dd.onchange.do(lambda em, v, idx=idx: self._on_meter_channel_change(idx, v))
         self._meter_channel_dds[idx] = ch_dd
 
+        # Per-meter polling interval. Live-editable — the meter i worker
+        # re-reads self._meter_poll_s[i] on every loop iteration.
+        poll_lbl = StyledLabel("Poll:", f"m_poll_lbl_{idx}", 700, y,
+                                width=38, height=row_h, color="#444",
+                                flex=True, justify_content="flex-start",
+                                container=parent)
+        poll_inp = StyledTextInput(f"m_poll_{idx}", 740, y,
+                                   width=55, height=row_h,
+                                   text=f"{_METER_POLL_S:g}", container=parent)
+        poll_inp.style["box-sizing"] = "border-box"
+        poll_inp.onchange.do(
+            lambda em, v, idx=idx: self._on_poll_interval_change(idx, v))
+        poll_unit = StyledLabel("s", f"m_poll_unit_{idx}", 800, y,
+                                 width=15, height=row_h, color="#444",
+                                 flex=True, justify_content="flex-start",
+                                 container=parent)
+        self._meter_poll_inputs[idx] = poll_inp
+
         # Force border-box so padding/border sit INSIDE the declared 24px
         # height — otherwise dropdowns render ~30px tall and lift out of
         # baseline with the labels/button/status dot next to them.
-        for w in (port_dd, refresh_btn, cbtn, ch_dd):
+        for w in (port_dd, refresh_btn, cbtn, ch_dd, poll_inp):
             w.style["box-sizing"] = "border-box"
         # Vertically center label text against the 24px row height so
         # "Meter 0:" and "Ch:" share the same baseline as the dropdowns.
-        for lbl in (m_lbl, stat, ch_lbl):
+        for lbl in (m_lbl, stat, ch_lbl, poll_lbl, poll_unit):
             lbl.style["line-height"] = f"{row_h}px"
 
         # Hide the whole row by default; also parent container we'll style children directly.
@@ -663,12 +705,15 @@ class VoltageSourceApp(App):
             lambda: self._meter_connect_btns[idx],
             lambda: self._meter_status_lbls[idx],
             lambda: self._meter_channel_dds[idx],
+            lambda: self._meter_poll_inputs[idx],
         ):
             w = widget_getter()
             if w is not None:
                 w.style["display"] = "none"
         # Hide the labels too — they were appended to parent by variable_name.
-        for lbl_ident in (f"m_lbl_{idx}", f"m_ch_lbl_{idx}", f"m_refresh_{idx}"):
+        for lbl_ident in (f"m_lbl_{idx}", f"m_ch_lbl_{idx}",
+                           f"m_refresh_{idx}", f"m_poll_lbl_{idx}",
+                           f"m_poll_unit_{idx}"):
             w = parent.children.get(lbl_ident)
             if w is not None:
                 w.style["display"] = "none"
@@ -1021,18 +1066,63 @@ class VoltageSourceApp(App):
     # =======================================================================
     def _on_recalibrate(self, ch: int):
         if not _vs.is_connected:
-            _log(f"[Recalibrate Ch {ch}] Not connected", calib=True)
+            _log(f"[Calibrate Ch {ch}] Not connected", calib=True)
             return
-        try:
-            r1k = float((self._cal_r1k_inputs[ch].get_value() or "").strip())
-            rg = float((self._cal_rgain_inputs[ch].get_value() or "").strip())
-            vref = float((self._cal_vref_inputs[ch].get_value() or "").strip())
-        except (ValueError, AttributeError) as e:
-            _log(f"[Recalibrate Ch {ch}] Invalid input: {e}", calib=True)
-            return
+
+        # Empty field → NaN, which the firmware interprets as "echo my
+        # stored calibration back to me". If the user leaves ALL three
+        # blank we effectively ask the ESP for its current values.
+        def _read(inp) -> float:
+            s = (inp.get_value() or "").strip() if inp is not None else ""
+            if not s:
+                return float("nan")
+            try:
+                return float(s)
+            except ValueError:
+                return float("nan")
+
+        r1k = _read(self._cal_r1k_inputs[ch])
+        rg = _read(self._cal_rgain_inputs[ch])
+        vref = _read(self._cal_vref_inputs[ch])
+
         _vs.send_calibration(ch, r1k, rg, vref)
-        _log(f"[Recalibrate Ch {ch}] R_1k={r1k} R_gain={rg} Vref={vref}",
+        _log(f"[Calibrate Ch {ch}] R_1k={r1k} R_gain={rg} Vref={vref}",
              calib=True)
+
+    def _request_all_calibrations(self):
+        """Fire off an all-NaN CALIBRATION for every channel so firmware
+        echoes back the stored values (which populate the GUI fields via
+        the calib callback). Spaced apart because the firmware
+        calib_data_queue has depth 1 — sending too fast drops responses."""
+        def _worker():
+            # Small warm-up so the reader thread is up and the ESP finishes
+            # whatever init it's doing right after we opened the port.
+            time.sleep(0.5)
+            nan = float("nan")
+            for ch in range(4):
+                if not _vs.is_connected:
+                    return
+                _vs.send_calibration(ch, nan, nan, nan)
+                # Give the firmware time to drain its 1-slot echo queue
+                # before we queue the next channel's response.
+                time.sleep(0.15)
+        threading.Thread(target=_worker, daemon=True,
+                          name="req-calib").start()
+
+    def _on_calib_received(self, channel_id: int, r_1k: float,
+                            r_gain: float, dac_vref: float):
+        """Firmware calib echo → push into the input fields for the channel
+        the firmware reports. Fires for boot-time sends AND explicit
+        Calibrate presses / all-NaN read-back, so every row is populated
+        as soon as the ESP tells us its stored values."""
+        if not 0 <= channel_id < 4:
+            return
+        if self._cal_r1k_inputs[channel_id] is not None:
+            self._cal_r1k_inputs[channel_id].set_value(f"{r_1k:.4f}")
+        if self._cal_rgain_inputs[channel_id] is not None:
+            self._cal_rgain_inputs[channel_id].set_value(f"{r_gain:.4f}")
+        if self._cal_vref_inputs[channel_id] is not None:
+            self._cal_vref_inputs[channel_id].set_value(f"{dac_vref:.5f}")
 
     def _on_meter_count_change(self, val):
         try:
@@ -1055,10 +1145,13 @@ class VoltageSourceApp(App):
             visible = idx < n
             display = "block" if visible else "none"
             for w in (self._meter_port_dds[idx], self._meter_connect_btns[idx],
-                      self._meter_status_lbls[idx], self._meter_channel_dds[idx]):
+                      self._meter_status_lbls[idx], self._meter_channel_dds[idx],
+                      self._meter_poll_inputs[idx]):
                 if w is not None:
                     w.style["display"] = display
-            for lbl_ident in (f"m_lbl_{idx}", f"m_ch_lbl_{idx}", f"m_refresh_{idx}"):
+            for lbl_ident in (f"m_lbl_{idx}", f"m_ch_lbl_{idx}",
+                               f"m_refresh_{idx}", f"m_poll_lbl_{idx}",
+                               f"m_poll_unit_{idx}"):
                 w = self._meter_rows_container.children.get(lbl_ident)
                 if w is not None:
                     w.style["display"] = display
@@ -1154,6 +1247,25 @@ class VoltageSourceApp(App):
             return
         self._meter_channel[idx] = _clamp(ch, 0, 3)
 
+    def _on_poll_interval_change(self, idx: int, val):
+        try:
+            v = float((val or "").strip())
+        except (TypeError, ValueError):
+            return
+        if v < _METER_POLL_MIN_S:
+            v = _METER_POLL_MIN_S
+            inp = self._meter_poll_inputs[idx]
+            if inp is not None:
+                inp.set_value(f"{v:g}")
+        self._meter_poll_s[idx] = v
+
+    def _latest_pcb_current(self, ch: int) -> float | None:
+        """Most recent PCB current sample for a channel (µA), or None."""
+        buf = self._pcb_rolling[ch]
+        if not buf:
+            return None
+        return buf[-1][1]
+
     # =======================================================================
     # Meter poller (one thread per connected meter)
     # =======================================================================
@@ -1162,11 +1274,12 @@ class VoltageSourceApp(App):
             m = _meters[idx]
             if m is None or not m.is_connected:
                 break
+            interval = max(_METER_POLL_MIN_S, self._meter_poll_s[idx])
             # Only sample when the assigned channel is actively in STEADY —
             # otherwise the plot fills up with meter-only data.
             ch = self._meter_channel[idx]
             if self._active_modes[ch] != "STEADY":
-                if stop.wait(_METER_POLL_S):
+                if stop.wait(interval):
                     return
                 continue
             try:
@@ -1184,11 +1297,11 @@ class VoltageSourceApp(App):
                 cutoff = t - _ROLLING_WINDOW_S
                 while buf and buf[0][0] < cutoff:
                     buf.pop(0)
-            # If a steady TXT log is currently open for this channel, append
-            # the meter sample with the applied voltage as reference.
-            _vs.write_steady_row(ch, f"meter{idx}",
-                                 self._applied_voltages[ch], i_uA)
-            if stop.wait(_METER_POLL_S):
+            # Steady TXT log: one row per meter poll, with a dedicated
+            # column for THIS meter and the latest PCB reading for reference.
+            _vs.write_steady_row(ch, t, self._applied_voltages[ch],
+                                 self._latest_pcb_current(ch), idx, i_uA)
+            if stop.wait(interval):
                 return
 
     # =======================================================================
@@ -1208,6 +1321,26 @@ class VoltageSourceApp(App):
             except Exception:
                 pass
 
+        # One-shot: force reload if this browser is holding widget IDs from
+        # a previous Python process (their runtimeInstances entries are gone
+        # in the new process, so every callback would KeyError).
+        if not self._boot_id_checked:
+            try:
+                self.execute_javascript(
+                    "(function(id){"
+                    "var k='remi_boot_id',s=null;"
+                    "try{s=localStorage.getItem(k);}catch(e){return;}"
+                    "if(s===null){"
+                    "try{localStorage.setItem(k,id);}catch(e){}"
+                    "}else if(s!==id){"
+                    "try{localStorage.setItem(k,id);}catch(e){}"
+                    "location.reload();"
+                    "}"
+                    f"}})('{_BOOT_ID}');")
+                self._boot_id_checked = True
+            except Exception:
+                pass
+
         # ESP connection state
         connected = _vs.is_connected
         if connected != self._was_connected:
@@ -1222,6 +1355,8 @@ class VoltageSourceApp(App):
                                  kwargs={"output_dir": "output"},
                                  daemon=True).start()
                 _log(f"[Connected] {_vs.connected_port}")
+                # Pull the ESP's stored calibration into every row.
+                self._request_all_calibrations()
             else:
                 self._status_label.set_text("●  Disconnected")
                 self._status_label.style["color"] = _DOT_OFF

@@ -14,6 +14,7 @@
 
 QueueHandle_t event_queue;
 QueueHandle_t data_queue;
+QueueHandle_t calib_data_queue;
 QueueHandle_t user_cmd_queue;
 
 
@@ -147,3 +148,20 @@ void log_task (void* arg){
     }
   }
 }
+
+void send_calibdata_task (void* arg){
+
+ CalibData received_calib;
+
+ while(true){
+  if (xQueueReceive(calib_data_queue, &received_calib, 1) == pdTRUE){
+    printf("calib, %d, %.4f, %.4f, %.5f \n",
+        received_calib.channel_id,
+        received_calib.r_1k,
+        received_calib.r_gain,
+        received_calib.dac_vref
+    );
+  }
+ }
+}
+
