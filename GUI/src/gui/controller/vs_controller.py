@@ -86,6 +86,15 @@ class VoltageSourceController:
         self._heartbeat_stop: threading.Event = threading.Event()
         self._heartbeat_interval_s: float = 2.0
 
+        # Diagnostic log — a plain text file that captures every non-data
+        # line from the ESP (firmware ESP_LOGx, printf, boot banners),
+        # heartbeat scheduling gaps, heartbeat send failures, and
+        # connect/disconnect events. Purpose: survive GUI-process death and
+        # give a post-mortem trail when a long steady run stops early.
+        self._diag_lock: threading.Lock = threading.Lock()
+        self._diag_file = None
+        self._diag_path: str = ""
+
     @property
     def is_connected(self) -> bool:
         s = self._serial
@@ -184,6 +193,8 @@ class VoltageSourceController:
                 print(f"[VoltageSource] Connect failed on {port}: {e}")
                 self._serial = None
         if check_connect:
+            self._open_diag_log()
+            self._diag(f"connect port={port} baud={baud}")
             self._start_heartbeat()
         return check_connect
 
@@ -203,7 +214,52 @@ class VoltageSourceController:
             except Exception:
                 pass
         self._serial = None
+        self._diag("disconnect")
+        self._close_diag_log()
         print("[VoltageSource] Disconnected")
+
+    # ---- Diagnostic log --------------------------------------------------
+    def _open_diag_log(self):
+        with self._diag_lock:
+            self._close_diag_log_locked()
+            try:
+                os.makedirs(self._last_output_dir, exist_ok=True)
+                ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                path = os.path.join(self._last_output_dir, f"vs_diag_{ts}.log")
+                # buffering=1 → line-buffered; every write is flushed to
+                # disk immediately so a killed process still leaves a
+                # complete trail.
+                self._diag_file = open(path, "a", buffering=1)
+                self._diag_path = path
+                print(f"[VoltageSource] Diag log → {path}")
+            except Exception as e:
+                print(f"[VoltageSource] Failed to open diag log: {e}")
+                self._diag_file = None
+                self._diag_path = ""
+
+    def _close_diag_log(self):
+        with self._diag_lock:
+            self._close_diag_log_locked()
+
+    def _close_diag_log_locked(self):
+        f = self._diag_file
+        self._diag_file = None
+        if f is not None:
+            try:
+                f.close()
+            except Exception:
+                pass
+
+    def _diag(self, msg: str):
+        with self._diag_lock:
+            f = self._diag_file
+            if f is None:
+                return
+            try:
+                ts = datetime.datetime.now().isoformat(timespec="milliseconds")
+                f.write(f"{ts} {msg}\n")
+            except Exception:
+                pass
 
     def _start_heartbeat(self):
         """Spawn the background thread that keeps the firmware USB cable-watchdog fed."""
@@ -211,16 +267,52 @@ class VoltageSourceController:
         stop = threading.Event()
         self._heartbeat_stop = stop
 
+        interval = self._heartbeat_interval_s
+        diag = self._diag
+
         def _loop():
-            while not stop.is_set():
-                if stop.wait(self._heartbeat_interval_s):
-                    return
-                if not self.is_connected:
-                    continue
-                try:
-                    self.send_command("hb")
-                except Exception:
-                    pass
+            # 5 min at 2 s = 150 beats per alive-tick. Cheap enough for a
+            # 20 h run (~240 lines) and dense enough to prove the thread
+            # stayed alive right up to a failure.
+            ALIVE_EVERY = 150
+            last = time.monotonic()
+            beat_ct = 0
+            diag("heartbeat: thread started")
+            try:
+                while not stop.is_set():
+                    if stop.wait(interval):
+                        break
+                    now = time.monotonic()
+                    gap = now - last
+                    last = now
+                    # Anything meaningfully longer than the interval means
+                    # the thread was starved (GIL stall, swap, SIGSTOP…).
+                    # This is the signal we care most about for the 15 h
+                    # early-stop investigation.
+                    if gap > interval + 1.0:
+                        diag(f"heartbeat: SCHEDULING GAP {gap:.2f}s "
+                             f"(expected ~{interval:.1f}s)")
+                    if not self.is_connected:
+                        diag("heartbeat: skipped (not connected)")
+                        continue
+                    ok = False
+                    err = None
+                    try:
+                        ok = self.send_command("hb")
+                    except Exception as e:
+                        err = repr(e)
+                    if not ok:
+                        diag(f"heartbeat: SEND FAILED "
+                             f"err={err or 'send_command returned False'}")
+                    else:
+                        beat_ct += 1
+                        if beat_ct == 1 or beat_ct % ALIVE_EVERY == 0:
+                            diag(f"heartbeat: alive tick #{beat_ct}")
+            except BaseException as e:
+                diag(f"heartbeat: THREAD DIED err={e!r}")
+                raise
+            finally:
+                diag("heartbeat: thread exiting")
 
         t = threading.Thread(target=_loop, daemon=True, name="vs-heartbeat")
         self._heartbeat_thread = t
@@ -456,6 +548,7 @@ class VoltageSourceController:
         holding no locks; acquires _write_lock internally.
         """
         self._reading = False
+        self._diag(f"connection lost: {reason}")
         with self._write_lock:
             self._close_locked()
         msg = f"[VoltageSource] Connection lost: {reason}"
@@ -564,6 +657,12 @@ class VoltageSourceController:
                 self._handle_calib_line(line)
                 continue
             if not line.startswith("data,"):
+                if line:
+                    # Write firmware output to the diag file first so it
+                    # persists even if the GUI callback throws or the GUI
+                    # process is gone. The firmware's watchdog trigger
+                    # ("USB connection lost") lands here.
+                    self._diag(f"esp: {line}")
                 if line and self.log_callback is not None:
                     try:
                         self.log_callback(f"[ESP] {line}")

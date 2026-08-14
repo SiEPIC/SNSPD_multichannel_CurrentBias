@@ -43,6 +43,7 @@ void user_cmd_task(void* arg){
           xQueueSend(user_cmd_queue, &cmd, 0);
         }
         wdt_connection = esp_timer_get_time();
+        ESP_LOGE(TAG, "USB connection lost");
       }
 
       vTaskDelay(pdMS_TO_TICKS(20));
