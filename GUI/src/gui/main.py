@@ -18,7 +18,7 @@ import webview
 from remi import App, start
 import remi.gui as gui
 
-from layout.lib_gui import (
+from .layout.lib_gui import (
     StyledButton,
     StyledCheckBox,
     StyledContainer,
@@ -26,9 +26,9 @@ from layout.lib_gui import (
     StyledLabel,
     StyledTextInput,
 )
-from layout.window_config import get_window_config
-from controller.scpi_meter_controller import ScpiMeterController
-from controller.vs_controller import VoltageSourceController
+from .layout.window_config import get_window_config
+from .controller.scpi_meter_controller import ScpiMeterController
+from .controller.vs_controller import VoltageSourceController
 
 logging.getLogger("remi").setLevel(logging.WARNING)
 
@@ -1731,12 +1731,11 @@ def _install_shutdown_hooks():
             pass
 
 
-if __name__ == "__main__":
+def run():
     try:
         _install_shutdown_hooks()
         cfg = get_window_config("voltage_source")
         port = cfg.get("port", 8006)
-
         if platform.system() == "Windows":
             threading.Thread(target=run_remi, daemon=True).start()
             webview.create_window(
@@ -1753,3 +1752,7 @@ if __name__ == "__main__":
     except Exception:
         import traceback
         traceback.print_exc()
+
+
+if __name__ == "__main__":
+    run()
