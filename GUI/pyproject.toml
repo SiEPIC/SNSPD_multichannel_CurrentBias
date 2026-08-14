@@ -1,7 +1,7 @@
 [project]
 name = "gui"
 version = "0.1.0"
-description = "Python Environment for GUI"
+description = "Python Environment for the gui"
 authors = [
     { name = "ta1_k", email = "t.kamei0716@gmail.com" }
 ]
@@ -31,7 +31,7 @@ dependencies = [
     "pywebview==6.2.1",
     "qtpy==2.4.3",
     "remi==2022.7.27",
-    "setuptools==80.10.2",
+    "setuptools==80.10.2",http://127.0.0.1:8006/
     "six==1.17.0",
     "typing-extensions==4.16.0",
 ]
