@@ -352,7 +352,10 @@ class VoltageSourceController:
             self._steady_writers[channel_id] = w
             self._steady_paths[channel_id] = path
             self._steady_meter_indices[channel_id] = indices
-            self._steady_t0[channel_id] = time.time()
+            # NB: t0 is *not* set here — it's stamped on the first
+            # write_steady_row so the first recorded row is exactly 0.000s,
+            # regardless of the delay between opening the file and the
+            # first meter poll.
         print(f"[VoltageSource] Ch{channel_id} steady log → {path}")
         return path
 
@@ -393,9 +396,14 @@ class VoltageSourceController:
             w = self._steady_writers.get(channel_id)
             f = self._steady_files.get(channel_id)
             indices = self._steady_meter_indices.get(channel_id, [])
-            t0 = self._steady_t0.get(channel_id, timestamp)
             if w is None or f is None:
                 return
+            # Anchor t0 to the first poll so the first row is 0.000s and
+            # subsequent rows step forward from there.
+            t0 = self._steady_t0.get(channel_id)
+            if t0 is None:
+                t0 = timestamp
+                self._steady_t0[channel_id] = t0
             try:
                 elapsed = max(0.0, timestamp - t0)
                 row = [

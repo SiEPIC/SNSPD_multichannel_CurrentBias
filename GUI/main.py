@@ -32,6 +32,29 @@ from controller.vs_controller import VoltageSourceController
 
 logging.getLogger("remi").setLevel(logging.WARNING)
 
+
+class _StaleWidgetFilter(logging.Filter):
+    """Silence remi's 'error parsing websocket' KeyErrors.
+
+    A browser tab held over from a previous Python process still has
+    widget IDs cached in JS; the first event it fires after the WS
+    reconnects hits runtimeInstances[stale_id] and raises KeyError before
+    our boot-ID reload can take effect. That log message + traceback is
+    pure noise — the reload handles it a few ms later.
+    """
+
+    def filter(self, record):
+        if "error parsing websocket" not in record.getMessage():
+            return True
+        exc_info = record.exc_info
+        if exc_info is None:
+            return True
+        exc_type = exc_info[0]
+        return exc_type is not KeyError
+
+
+logging.getLogger("remi.server.ws").addFilter(_StaleWidgetFilter())
+
 # ---------------------------------------------------------------------------
 # Layout constants
 # ---------------------------------------------------------------------------
@@ -59,7 +82,7 @@ _ODR_OPTIONS = ["1.25", "2.5", "5", "10", "16", "20", "49", "59", "100", "200"]
 _ODR_DEFAULT = "10"
 
 _CAL_R1K_DEF = "1000.0"
-_CAL_RGAIN_DEF = "401.0"
+_CAL_RGAIN_DEF = "402.0"
 _CAL_VREF_DEF = "2.5"
 
 _METER_POLL_S = 1.0          # seconds between meter samples (initial default)
@@ -140,7 +163,35 @@ class VoltageSourceApp(App):
         # stay in sync with what the ESP has actually stored (including the
         # all-NaN "read stored values" reply).
         _vs.calib_callback = self._on_calib_received
-        return self._build_ui()
+        root = self._build_ui()
+        # Fire the boot-ID reload check IMMEDIATELY (before build_ui returns
+        # to remi), not on the first idle() tick — otherwise a browser tab
+        # from a previous Python process gets to send a batch of stale-widget
+        # events before the reload can fire.
+        #
+        # sessionStorage acts as a fuse: it persists across location.reload()
+        # but resets when the tab is closed. That way we can guarantee at
+        # most ONE reload per tab per boot-ID even if localStorage misbehaves
+        # (private mode, strict-privacy settings, setItem not flushing
+        # before reload, etc.), so we can never end up in a reload loop.
+        try:
+            self.execute_javascript(
+                "(function(id){"
+                "var k='remi_boot_id',fk='remi_boot_reloaded',s=null;"
+                "try{s=localStorage.getItem(k);}catch(e){return;}"
+                "if(s===id)return;"
+                "try{localStorage.setItem(k,id);}catch(e){}"
+                "if(s===null)return;"
+                "try{"
+                "if(sessionStorage.getItem(fk)===id)return;"
+                "sessionStorage.setItem(fk,id);"
+                "}catch(e){return;}"
+                "location.reload();"
+                f"}})('{_BOOT_ID}');")
+            self._boot_id_checked = True
+        except Exception:
+            pass
+        return root
 
     def _init_state(self):
         # Tab / panel
@@ -188,6 +239,7 @@ class VoltageSourceApp(App):
         self._cal_rgain_inputs = [None] * 4
         self._cal_vref_inputs = [None] * 4
         self._recal_btns = [None] * 4
+        self._fetch_calib_btns = [None] * 4
 
         self._meter_count_dd = None
         self._meter_rows_container = None
@@ -208,6 +260,7 @@ class VoltageSourceApp(App):
 
         self._calib_plot_imgs = [None] * 4
         self._calib_no_data_lbls = [None] * 4
+        self._calib_readout_lbls = [None] * 4
         self._last_calib_render = [0.0] * 4
 
         # Rolling buffers (wall-clock time, current µA)
@@ -573,10 +626,11 @@ class VoltageSourceApp(App):
         # Extra top gap separates plots from the meter/log section above.
         plot_y0 = 200
         plot_col_x = [5, 720]
-        plot_row_h = 250
-        # Larger inter-row gap so the row-1 "Ch 2"/"Ch 3" labels breathe away
-        # from the row-0 plot boxes above.
-        plot_row_gap = 55
+        plot_row_h = 225
+        # Larger inter-row gap so the row-1 "Ch 2"/"Ch 3" labels don't
+        # collide with the new live-readout labels sitting below row 0's
+        # plot boxes.
+        plot_row_gap = 78
         plot_row_y = [plot_y0, plot_y0 + plot_row_h + plot_row_gap]
         plot_w, plot_h = 700, plot_row_h
 
@@ -627,6 +681,13 @@ class VoltageSourceApp(App):
                                container=container)
             btn.do_onclick(lambda ch=ch: self._on_recalibrate(ch))
             self._recal_btns[ch] = btn
+
+            fetch = StyledButton("Fetch", f"fetch_{ch}",
+                                 col_btn_x + 150, y - 2, width=100, height=30,
+                                 normal_color="#007BFF", press_color="#0056B3",
+                                 container=container)
+            fetch.do_onclick(lambda ch=ch: self._on_fetch_calib(ch))
+            self._fetch_calib_btns[ch] = fetch
 
     def _build_meter_row(self, parent, idx: int):
         y = idx * 30
@@ -754,6 +815,21 @@ class VoltageSourceApp(App):
                               color="#aaa", flex=True,
                               container=container)
         self._calib_no_data_lbls[ch] = no_data
+
+        # Live readout: PCB µA + each connected meter's µA for this channel.
+        # Updated on every idle tick alongside the plot render.
+        readout = StyledLabel("—", f"cplot_ro_{ch}",
+                              x + 5, y + 26 + h + 6,
+                              width=w - 10, height=22,
+                              color="#333", flex=True,
+                              justify_content="flex-start",
+                              container=container)
+        readout.style.update({
+            "font-family": "monospace",
+            "font-size": "13px",
+            "font-weight": "bold",
+        })
+        self._calib_readout_lbls[ch] = readout
 
     # =======================================================================
     # Event handlers — Ctrl tab
@@ -1089,6 +1165,16 @@ class VoltageSourceApp(App):
         _log(f"[Calibrate Ch {ch}] R_1k={r1k} R_gain={rg} Vref={vref}",
              calib=True)
 
+    def _on_fetch_calib(self, ch: int):
+        """Ask the ESP to echo back its stored calibration for this channel
+        (all-NaN send is the firmware's read-back signal). The echo lands
+        in _on_calib_received and repopulates the input fields."""
+        if not _vs.is_connected:
+            _log(f"[Fetch Ch {ch}] Not connected", calib=True)
+            return
+        nan = float("nan")
+        _vs.send_calibration(ch, nan, nan, nan)
+
     def _request_all_calibrations(self):
         """Fire off an all-NaN CALIBRATION for every channel so firmware
         echoes back the stored values (which populate the GUI fields via
@@ -1266,6 +1352,26 @@ class VoltageSourceApp(App):
             return None
         return buf[-1][1]
 
+    def _update_calib_readout(self, ch: int):
+        """Refresh the per-channel PCB+meter live readout under the plot."""
+        lbl = self._calib_readout_lbls[ch]
+        if lbl is None:
+            return
+        parts: list[str] = []
+        pcb = self._latest_pcb_current(ch)
+        if pcb is not None:
+            parts.append(f"PCB: {pcb:.4f} µA")
+        with self._meter_samples_lock:
+            for idx in range(self._meter_count):
+                if self._meter_channel[idx] != ch:
+                    continue
+                if not _meter_connected(idx):
+                    continue
+                buf = self._meter_samples[idx]
+                if buf:
+                    parts.append(f"Meter {idx}: {buf[-1][1]:.4f} µA")
+        lbl.set_text("   |   ".join(parts) if parts else "—")
+
     # =======================================================================
     # Meter poller (one thread per connected meter)
     # =======================================================================
@@ -1276,10 +1382,13 @@ class VoltageSourceApp(App):
                 break
             interval = max(_METER_POLL_MIN_S, self._meter_poll_s[idx])
             # Only sample when the assigned channel is actively in STEADY —
-            # otherwise the plot fills up with meter-only data.
+            # otherwise the plot fills up with meter-only data. Use a short
+            # poll while idle so a long `interval` (e.g. 10 min) doesn't
+            # delay the first STEADY sample by up to a full interval after
+            # the user hits Apply.
             ch = self._meter_channel[idx]
             if self._active_modes[ch] != "STEADY":
-                if stop.wait(interval):
+                if stop.wait(min(interval, 0.2)):
                     return
                 continue
             try:
@@ -1321,26 +1430,6 @@ class VoltageSourceApp(App):
             except Exception:
                 pass
 
-        # One-shot: force reload if this browser is holding widget IDs from
-        # a previous Python process (their runtimeInstances entries are gone
-        # in the new process, so every callback would KeyError).
-        if not self._boot_id_checked:
-            try:
-                self.execute_javascript(
-                    "(function(id){"
-                    "var k='remi_boot_id',s=null;"
-                    "try{s=localStorage.getItem(k);}catch(e){return;}"
-                    "if(s===null){"
-                    "try{localStorage.setItem(k,id);}catch(e){}"
-                    "}else if(s!==id){"
-                    "try{localStorage.setItem(k,id);}catch(e){}"
-                    "location.reload();"
-                    "}"
-                    f"}})('{_BOOT_ID}');")
-                self._boot_id_checked = True
-            except Exception:
-                pass
-
         # ESP connection state
         connected = _vs.is_connected
         if connected != self._was_connected:
@@ -1355,8 +1444,6 @@ class VoltageSourceApp(App):
                                  kwargs={"output_dir": "output"},
                                  daemon=True).start()
                 _log(f"[Connected] {_vs.connected_port}")
-                # Pull the ESP's stored calibration into every row.
-                self._request_all_calibrations()
             else:
                 self._status_label.set_text("●  Disconnected")
                 self._status_label.style["color"] = _DOT_OFF
@@ -1454,6 +1541,8 @@ class VoltageSourceApp(App):
             if now - self._last_calib_render[ch] >= 1.0 / _CALIB_RENDER_HZ:
                 self._render_calib_plot(ch)
                 self._last_calib_render[ch] = now
+            # Live readout under the plot — cheap, refresh every tick.
+            self._update_calib_readout(ch)
 
         # Log terminal
         if _log_seq != self._last_log_seq and self._log_text is not None:

@@ -34,13 +34,11 @@ bool Channel::init(uint8_t id, ad717x_dev* adc_dev, ad5761r_dev* dac_dev){
   dac_dev_ = dac_dev;
 
   current_sense_data_ = load_calibration();
-  send_calib_data();
   ad5761r_write_update_dac_register(dac_dev_, voltage_to_bin(0.0f));
 
   ad717x_set_channel_status(adc_dev_, channel_id, true);
   AD717X_WaitForReady(adc_dev_, AD717X_CONV_TIMEOUT);
-  int32_t err = ad717x_configure_device_odr(adc_dev_, channel_id, sps_10);
-  ESP_LOGI(TAG, "%u", err);
+  ad717x_configure_device_odr(adc_dev_, channel_id, sps_10);
   channel_odr = ODR_DEFAULT;
 
   AD717X_WaitForReady(adc_dev_, AD717X_CONV_TIMEOUT);
@@ -104,6 +102,7 @@ void Channel::steady_run(){
 
   if (steady_.timer_en_ && esp_timer_get_time() > steady_.finish_time_){
     ESP_LOGI(TAG, "Ch%d steady timer done", channel_id);
+    steady_.initialized_ = false;
     stop();
   } 
 
@@ -409,6 +408,7 @@ void Channel::set_calibration(const UserCmd& cmd){
   nvs_close(handle);
   ESP_LOGI(TAG, "Calibration successful");
 }
+
 
 void Channel::send_calib_data(void){
 

@@ -23,7 +23,7 @@ constexpr const float DECI_24BIT = static_cast<float>(0x800000);
 
 constexpr const float DAC_VREF_DEFAULT = 2.5; //External reference voltage
 constexpr const float R_1K_DEFAULT = 1000.0;
-constexpr const float R_GAIN_DEFAULT = 401.0;
+constexpr const float R_GAIN_DEFAULT = 402.0;
 
 constexpr const float DAC_VREF_TOL = 0.01; // 0.5% Tolerance
 constexpr const float R_1K_TOL = 0.01; // 1% Tolerance

@@ -36,12 +36,13 @@ void user_cmd_task(void* arg){
 
       //Software watchdog for USB cable connection. 
       //Checks for the signal from laptop sent every 2 seconds  
-      if ((esp_timer_get_time() - wdt_connection) > 2.5 * 1e6) {
+      if ((esp_timer_get_time() - wdt_connection) > 4.0 * 1e6) {
         for (uint8_t i = 0; i < NUM_CHANNELS; i++){
           cmd.channel_id = i;
           cmd.mode = Mode::IDLE;
           xQueueSend(user_cmd_queue, &cmd, 0);
         }
+        wdt_connection = esp_timer_get_time();
       }
 
       vTaskDelay(pdMS_TO_TICKS(20));
