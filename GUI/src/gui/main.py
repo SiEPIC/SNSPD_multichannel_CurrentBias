@@ -1489,9 +1489,8 @@ class VoltageSourceApp(App):
         now = time.time()
         for ch in range(4):
             if _vs.has_new_data(ch):
-                data = _vs.get_channel_data(ch)
-                if data:
-                    latest = data[-1]
+                latest = _vs.get_latest_sample(ch)
+                if latest is not None:
                     # Firmware mode: 0=SWEEP, 1=STEADY, else OFF
                     if latest.mode >= 2:
                         fw = "OFF"
@@ -1531,8 +1530,9 @@ class VoltageSourceApp(App):
                                 f"Current: {latest.current:.5f} µA")
                     else:  # OFF
                         if self._sweep_active[ch]:
-                            # Sweep just ended — render final plot and expose the link
-                            self._render_sweep_plot(ch, data)
+                            # Sweep just ended — render final plot and expose the link.
+                            # Only pay the O(N) buffer copy here, once per sweep.
+                            self._render_sweep_plot(ch, _vs.get_channel_data(ch))
                             self._sweep_active[ch] = False
                         if readout is not None:
                             readout.style["display"] = "none"

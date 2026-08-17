@@ -3,6 +3,7 @@ import os
 import threading
 import time
 import datetime
+from collections import deque
 from dataclasses import dataclass
 
 import serial
@@ -40,7 +41,14 @@ class VoltageSourceController:
         #      dac_vref: float) -> None
         self.calib_callback = None
 
-        self._data_buffers: dict[int, list] = {i: [] for i in range(4)}
+        # Bounded rolling buffer per channel. STEADY only ever needs the
+        # newest sample (GUI reads [-1]); SWEEP needs the whole run, but
+        # clear_channel_data() runs at sweep start so the deque only holds
+        # one sweep's worth. maxlen covers the worst-case sweep
+        # (~3000 pts at range 1.5 V / step 1 mV) with headroom.
+        self._data_buffers: dict[int, deque] = {
+            i: deque(maxlen=4096) for i in range(4)
+        }
         self._data_lock = threading.Lock()
         self._new_data: dict[int, bool] = {i: False for i in range(4)}
 
@@ -736,6 +744,17 @@ class VoltageSourceController:
     def has_new_data(self, channel_id: int) -> bool:
         """Return True if new data has arrived for this channel since last get."""
         return self._new_data.get(channel_id, False)
+
+    def get_latest_sample(self, channel_id: int):
+        """Return only the most recent sample and clear the new-data flag.
+
+        Use this on hot paths (idle loop) so per-tick work stays O(1) instead
+        of paying an O(N) copy of the whole rolling buffer.
+        """
+        with self._data_lock:
+            self._new_data[channel_id] = False
+            buf = self._data_buffers.get(channel_id)
+            return buf[-1] if buf else None
 
     def get_channel_data(self, channel_id: int) -> list:
         """Return a copy of the data buffer for a channel and clear the new-data flag."""
