@@ -5,6 +5,7 @@ import base64
 import csv
 import datetime
 import io
+from collections import deque
 import logging
 import os
 import platform
@@ -87,7 +88,6 @@ _CAL_VREF_DEF = "2.5"
 
 _METER_POLL_S = 1.0          # seconds between meter samples (initial default)
 _METER_POLL_MIN_S = 0.05     # safety floor to avoid saturating VISA / meter
-_ROLLING_WINDOW_S = 60.0     # calib plot look-back window
 _PCB_LOG_INTERVAL = 0.05     # min seconds between PCB samples pushed to rolling buffer
 _CALIB_RENDER_HZ = 1.0
 
@@ -263,10 +263,18 @@ class VoltageSourceApp(App):
         self._calib_readout_lbls = [None] * 4
         self._last_calib_render = [0.0] * 4
 
-        # Rolling buffers (wall-clock time, current µA)
-        self._pcb_rolling: list[list[tuple[float, float]]] = [[] for _ in range(4)]
+        # Rolling buffers (wall-clock time, current µA). Bounded by count so
+        # the calib plot's x-axis grows with the steady session (buffers are
+        # cleared on Apply) instead of sliding in a fixed time window.
+        # maxlens sized for ~1 h of headroom at typical rates (PCB pushed at
+        # 20 Hz → 72 000; meters poll seconds-scale → 2 000 covers many hours).
+        self._pcb_rolling: list[deque] = [
+            deque(maxlen=72000) for _ in range(4)
+        ]
         self._pcb_last_push = [0.0] * 4
-        self._meter_samples: list[list[tuple[float, float]]] = [[] for _ in range(4)]
+        self._meter_samples: list[deque] = [
+            deque(maxlen=2000) for _ in range(4)
+        ]
         self._meter_samples_lock = threading.Lock()
 
         # Cached list of visible VISA resources — refreshed only when the
@@ -1391,6 +1399,19 @@ class VoltageSourceApp(App):
                 if stop.wait(min(interval, 0.2)):
                     return
                 continue
+            # Apply sets _active_modes optimistically before the firmware has
+            # streamed its first STEADY sample back, so on the very first poll
+            # _pcb_rolling can still be empty (→ blank pcb_current_uA in the
+            # TXT). Wait a short window for the first PCB sample so both
+            # columns are populated on the t=0 row.
+            if self._latest_pcb_current(ch) is None:
+                for _ in range(20):  # up to ~1.0 s
+                    if stop.wait(0.05):
+                        return
+                    if self._active_modes[ch] != "STEADY":
+                        break
+                    if self._latest_pcb_current(ch) is not None:
+                        break
             try:
                 i_A = m.measure_current()
             except Exception as e:
@@ -1401,11 +1422,7 @@ class VoltageSourceApp(App):
             t = time.time()
             i_uA = i_A * 1e6
             with self._meter_samples_lock:
-                buf = self._meter_samples[idx]
-                buf.append((t, i_uA))
-                cutoff = t - _ROLLING_WINDOW_S
-                while buf and buf[0][0] < cutoff:
-                    buf.pop(0)
+                self._meter_samples[idx].append((t, i_uA))
             # Steady TXT log: one row per meter poll, with a dedicated
             # column for THIS meter and the latest PCB reading for reference.
             _vs.write_steady_row(ch, t, self._applied_voltages[ch],
@@ -1513,13 +1530,11 @@ class VoltageSourceApp(App):
                             readout.set_text(
                                 f"Set: {self._applied_voltages[ch]:.3f} V   |   "
                                 f"Measured: {latest.current:.5f} µA")
-                        # Push to PCB rolling buffer (throttled)
+                        # Push to PCB rolling buffer (throttled). deque(maxlen=…)
+                        # caps growth so no manual trim is needed; the calib plot
+                        # window extends across the whole steady session.
                         if now - self._pcb_last_push[ch] >= _PCB_LOG_INTERVAL:
-                            buf = self._pcb_rolling[ch]
-                            buf.append((now, latest.current))
-                            cutoff = now - _ROLLING_WINDOW_S
-                            while buf and buf[0][0] < cutoff:
-                                buf.pop(0)
+                            self._pcb_rolling[ch].append((now, latest.current))
                             self._pcb_last_push[ch] = now
                     elif fw == "SWEEP":
                         self._sweep_active[ch] = True
