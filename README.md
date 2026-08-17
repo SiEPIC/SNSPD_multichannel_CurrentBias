@@ -78,6 +78,28 @@ uv sync
 
 ### Windows:
 
+1. Open PowerShell and install uv
+
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+2. Install driver for ESP32 UART chip: [CP210x Universal Windows Driver](https://www.silabs.com/software-and-tools/usb-to-uart-bridge-vcp-drivers?tab=downloads) 
+
+
+3. Open Device Manager and update driver
+<div align="center">
+  <img src="./Documentation/images/update_driver2.png" alt="Device Manager" width="70%">
+  <p><em>Click Update Driver</em></p>
+</div>
+<br>
+
+<div align="center">
+  <img src="./Documentation/images/browse-driver.png" alt="Device Manager" width="70%">
+  <p><em>Choose the downloaded driver, and click update</em></p>
+</div>
+
+4. Create the Python environment
+
 ```bash
 cd \GUI
 
@@ -101,7 +123,7 @@ Default URL: `http://127.0.0.1:8006`
 
 For each channel,
 
-- 4-wire sense measurement on $1000k \Omega$ and $401 \Omega$ resistors
+- 4-Wire Kelvin measurement on $1000k \Omega$ and $401 \Omega$ resistors
 - 2.5V reference voltage measurement 
 
 ## ODR Settings
