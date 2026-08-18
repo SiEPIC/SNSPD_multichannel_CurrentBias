@@ -9,3 +9,6 @@ __pycache__/
 *.pyc
 output/
 .venv/
+
+.vscode/
+.DS_Store

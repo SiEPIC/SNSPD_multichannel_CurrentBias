@@ -1,6 +1,6 @@
 # Third-Party Licenses
 
-This repository is licensed under the MIT License (see [LICENSE](LICENSE)),
+This repository is licensed under the MIT License (see [LICENSE](LICENSE.md)),
 except for the following vendored files, which retain their original
 licenses.
 
