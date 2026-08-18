@@ -2,9 +2,10 @@
 
 `vs_controller.py` (at `GUI/src/gui/controller/vs_controller.py`) is
 self-contained: its only runtime dependency is `pyserial`. It can be imported
-and driven from any Python script — the GUI is just one consumer of it.
+and driven from any Python script — the GUI is one consumer of it, not a
+prerequisite.
 
-## Importing it
+## Importing
 
 No relative imports are used inside the file, so any of these work:
 
@@ -23,36 +24,30 @@ from vs_controller import VoltageSourceController, DataLog
 from gui.controller.vs_controller import VoltageSourceController, DataLog
 ```
 
-## Minimum happy-path
+## Lifecycle
 
-```python
-vs = VoltageSourceController()
-
-port = vs.guess_port() or "/dev/ttyUSB0"   # or hard-code
-vs.connect(port, baud=115200)              # spawns the heartbeat thread
-vs.start_reading(output_dir="output")      # spawns the reader thread
-
-vs.send_steady(channel_id=0, voltage=0.25, duration=300, time_unit="Sec")
-# … work …
-vs.send_off(0)
-
-vs.stop_reading()   # closes any open sweep/steady logs
-vs.disconnect()     # stops heartbeat, closes port
+```
+connect  →  start_reading  →  send_…  →  stop_reading  →  disconnect
 ```
 
-Order matters: **connect → start_reading → send_… → stop_reading → disconnect**.
-Skip `start_reading` and no `data,…` lines are parsed. Skip `connect` (i.e. open
-a `serial.Serial` yourself) and the firmware's 2.5 s cable watchdog will zero
-every channel because no heartbeat is running.
+- `connect` opens the serial port and starts the 2 s cable-watchdog heartbeat.
+- `start_reading` spawns the background reader that parses `data,…` /
+  `calib,…` lines and populates the per-channel ring buffer.
+- `stop_reading` closes any open sweep log and joins the reader.
+- `disconnect` stops the heartbeat and closes the port.
 
-## Public API surface
+If you skip `start_reading`, no telemetry is parsed and `has_new_data` stays
+`False`. If you skip `connect` (opening `serial.Serial` yourself), the
+firmware zeros every channel after 2.5 s because no heartbeat is running.
+
+## Public API
 
 ### Static helpers
 
 - `VoltageSourceController.list_ports() → list[tuple[device, description]]` —
   USB-looking devices sorted first (by VID + keyword score).
-- `VoltageSourceController.guess_port() → str` — best pick, or `""` if nothing
-  looks USB-ish.
+- `VoltageSourceController.guess_port() → str` — best pick, or `""` if
+  nothing looks USB-ish.
 
 ### Connection state
 
@@ -66,30 +61,34 @@ All are fire-and-forget writes terminated with `\0`. Each returns `False`
 silently if the port is not open.
 
 - `send_off(ch)`
-- `send_steady(ch, voltage, duration, time_unit)` — `time_unit` is one of the
-  strings the firmware accepts (e.g. `"Sec"`, `"Min"`, `"Hour"`, `"Inf"`).
-- `send_sweep(ch, range_v, step_mv)`
+- `send_steady(ch, voltage, duration, time_unit)`
+  Runs channel `ch` at the constant DAC voltage. `time_unit` accepts the
+  firmware's timer tokens (`"Sec"`, `"Min"`, `"Hour"`) **or `"Inf"`, which
+  runs indefinitely and ignores `duration`**. `"Inf"` is the common case —
+  use it unless you specifically want the firmware to auto-turn-off after a
+  bounded interval.
+- `send_sweep(ch, range_v, step_mv)` — sweeps ±`range_v` in `step_mv` steps.
 - `send_calibration(ch, r_1k, r_gain, dac_vref)` — persisted in NVS on the ESP.
-- `send_odr(ch, sps)`
+- `send_odr(ch, sps)` — ADC output data rate.
 - `send_command(raw: str) → bool` — raw escape hatch.
 
 ### Live data reads
 
-The reader thread parses each incoming `data,…` line into a `DataLog` and
-appends it to a bounded ring buffer per channel (`deque(maxlen=4096)`).
+The reader thread parses each `data,…` line into a `DataLog` and appends it
+to a bounded ring buffer per channel (`deque(maxlen=4096)`).
 
-- `has_new_data(ch) → bool` — flag set since last `get_latest_sample` /
-  `get_channel_data`.
+- `has_new_data(ch) → bool` — set whenever a new sample has arrived since
+  the last consume.
 - `get_latest_sample(ch) → DataLog | None` — returns the newest sample and
-  clears the new-data flag. Cheap (O(1)); designed for tight consumer loops.
-- `peek_latest_sample(ch) → DataLog | None` — same, but does **not** touch the
-  flag. Use this from threads other than your main consumer.
-- `get_channel_data(ch) → list[DataLog]` — full copy of the ring. Only pay this
-  cost once per sweep end.
-- `clear_channel_data(ch)` — wipe the ring. Call before a fresh sweep so old
-  points do not linger.
+  clears the new-data flag. O(1); intended for the main consumer loop.
+- `peek_latest_sample(ch) → DataLog | None` — same, but does not touch the
+  flag. Safe from auxiliary threads.
+- `get_channel_data(ch) → list[DataLog]` — full copy of the ring. Pay this
+  cost only when you need the whole history (e.g. at sweep end).
+- `clear_channel_data(ch)` — wipe the ring. Call before a fresh sweep so
+  points from a prior run do not linger.
 
-`DataLog` is a dataclass with:
+`DataLog` fields:
 
 ```python
 channel_id: int
@@ -99,71 +98,107 @@ current: float   # µA
 time_s: float    # seconds since firmware boot (NOT wall time)
 ```
 
-### Optional TXT logging
+### Sweep TXT logging
 
-Sweep logging is automatic once `start_reading` is running: any `data,…` line
-with `mode == 0` is written to that channel's open sweep file.
+Automatic once `start_reading` is running: every `data,…` line with
+`mode == 0` is written to the channel's open sweep file.
 
 - `start_sweep_log(ch) → path` — auto-rotates by timestamp.
 - `stop_sweep_log(ch)`
 - `sweep_log_path(ch) → str`
 
-Steady logging is opt-in and manually driven. The reader does **not** write
-steady rows for you — you call `write_steady_row` from your metering loop.
-
-- `start_steady_log(ch, applied_voltage, duration_s, meter_indices) → path` —
-  writes header block + column row. Columns: `time_s`, `voltage_V`,
-  `pcb_current_uA`, then one `meter{idx}_current_uA` per meter you passed.
-- `write_steady_row(ch, timestamp, voltage_V, pcb_current_uA, meter_idx,
-  meter_current_uA)` — no-op if `start_steady_log` was not called first.
-  `timestamp` is wall-clock epoch; the file stores elapsed seconds since the
-  first row so row 0 is exactly `0.000`.
-- `stop_steady_log(ch)`
-- `steady_log_path(ch) → str`
+> The `start_steady_log` / `write_steady_row` helpers are shaped around the
+> GUI's meter-poll workflow (hard-coded `pcb_current_uA` + per-meter columns,
+> row written only when the caller explicitly hands over a meter reading).
+> For a pcb-only headless recording, ignore those helpers and stream
+> `peek_latest_sample(ch)` yourself — see the steady example below.
 
 ### Callbacks
 
 Optional. Both default to `None`.
 
-- `vs.log_callback = fn(msg: str)` — every non-`data,` line from the firmware
-  (boot banners, `ESP_LOGx`, `printf`, watchdog messages) is forwarded here.
+- `vs.log_callback = fn(msg: str)` — every non-`data,` line from the
+  firmware (boot banners, `ESP_LOGx`, `printf`, watchdog messages).
 - `vs.calib_callback = fn(ch, r_1k, r_gain, dac_vref)` — fires when the
   firmware sends a `calib,…` line (in reply to `send_calibration`, and on
   every boot).
 
-## Threads it spawns (all daemon)
+## Threads
 
-1. **Reader thread** (`start_reading`) — parses `data,…`, `calib,…`; passes
-   everything else to `log_callback`; writes sweep rows.
-2. **Heartbeat thread** (`connect`) — writes `hb` every 2 s. Non-optional; the
-   firmware zeros all channels if it goes 2.5 s without input.
-3. **Reconnect thread** — appears only after a USB drop, polls
-   `list_ports()` for the last-known device, and re-runs `connect` +
-   `start_reading` when it reappears. Bounded by `_reconnect_timeout_s = 30 s`.
-   Set `vs._auto_reconnect = False` before `disconnect()` to opt out.
+All threads are daemon threads and live entirely inside `vs_controller` — no
+external ticker is required.
 
-A diagnostic file `vs_diag_<timestamp>.log` is also opened in `output_dir` on
-each `connect`. It captures every non-`data,` line plus heartbeat scheduling
-gaps. Line-buffered — survives a killed process. Safe to ignore.
+1. **Reader thread** (`start_reading`) — parses `data,…` and `calib,…`;
+   forwards everything else to `log_callback`; writes sweep rows.
+2. **Heartbeat thread** (`connect`) — writes `hb` every 2 s. The firmware
+   zeros every channel after 2.5 s without input. `connect` starts it,
+   `disconnect` stops it.
+3. **Reconnect thread** — appears only after a USB drop, polls `list_ports()`
+   for the last-known device, and re-runs `connect` + `start_reading` when
+   it reappears. Bounded by `_reconnect_timeout_s = 30 s`. Set
+   `vs._auto_reconnect = False` before `disconnect()` to opt out.
+
+A diagnostic file `vs_diag_<timestamp>.log` is opened in `output_dir` on each
+`connect`. It captures every non-`data,` line and heartbeat scheduling gaps.
+Line-buffered so it survives a killed process.
 
 ## Gotchas
 
-- **Call `start_reading` after `connect`.** `connect` alone does not spawn the
-  reader. Without it, `has_new_data` is always `False`.
-- **Ring buffer is bounded at 4096 samples.** Fine for typical sweeps
-  (~3000 points at 1.5 V range / 1 mV step). Very fine sweeps overflow → old
-  points fall off the head. Sweep TXT is unaffected (written straight to disk).
-- **`send_command` returns `False` silently** if the port is not open — check
-  it or check `is_connected` first if you care.
-- **`time_s` on a `DataLog` is a firmware clock**, not epoch. Stamp
-  `time.time()` yourself when you read if you need wall time.
-- **`write_steady_row` is a no-op** if `start_steady_log(ch, …)` was not
-  called first for that channel.
-- **Concurrency:** the class is thread-safe for the exposed operations. Do
-  not touch `_serial` or `_data_buffers` directly from your own code — use
-  the accessors above.
+- `connect` alone does not spawn the reader — you must call `start_reading`.
+- The ring buffer is bounded at 4096 samples. Fine for typical sweeps
+  (~3000 points at 1.5 V range / 1 mV step). Very fine sweeps overflow and
+  the oldest samples drop off the head; the sweep TXT is unaffected because
+  it is written straight to disk.
+- `send_command` returns `False` silently if the port is not open. Check the
+  return value or `is_connected` if you care.
+- `DataLog.time_s` is a firmware clock, not epoch. Stamp `time.time()`
+  yourself when you read if you need wall time.
+- The class is thread-safe for the exposed operations. Do not reach into
+  `_serial` or `_data_buffers` directly — use the accessors above.
 
-## Full example: long steady run with a meter, no GUI
+## Example — steady
+
+```python
+import csv
+import time
+from vs_controller import VoltageSourceController
+
+vs = VoltageSourceController()
+vs.log_callback = lambda s: print("[esp]", s)
+
+vs.connect(vs.guess_port(), 115200)
+vs.start_reading(output_dir="output")
+
+ch, applied_v = 0, 0.25
+
+# Run indefinitely — "Inf" ignores the duration argument.
+vs.send_steady(ch, applied_v, 0, "Inf")
+
+# Bounded run (firmware auto-turns off after `duration` `unit`s):
+# vs.send_steady(ch, applied_v, 300, "Sec")
+
+path = f"output/pcb_ch{ch}_{int(time.time())}.txt"
+with open(path, "w", newline="") as f:
+    w = csv.writer(f, delimiter="\t")
+    w.writerow(["wall_time", "voltage_V", "pcb_current_uA"])
+    try:
+        while vs.is_connected:
+            s = vs.peek_latest_sample(ch)
+            if s is not None:
+                w.writerow([f"{time.time():.3f}",
+                            f"{s.voltage:.6f}",
+                            f"{s.current:.6f}"])
+                f.flush()
+            time.sleep(1.0)   # sampling cadence
+    except KeyboardInterrupt:
+        pass
+    finally:
+        vs.send_off(ch)
+        vs.stop_reading()
+        vs.disconnect()
+```
+
+## Example — sweep
 
 ```python
 import time
@@ -175,21 +210,24 @@ vs.log_callback = lambda s: print("[esp]", s)
 vs.connect(vs.guess_port(), 115200)
 vs.start_reading(output_dir="output")
 
-ch, applied_v = 0, 0.25
-vs.start_steady_log(ch, applied_v, duration_s=3600, meter_indices=[0])
-vs.send_steady(ch, applied_v, 3600, "Sec")
+ch = 0
+vs.clear_channel_data(ch)            # discard any prior samples
+vs.start_sweep_log(ch)               # per-channel TXT, auto-filled by the reader
+vs.send_sweep(ch, range_v=1.0, step_mv=10)
 
 try:
-    t_end = time.time() + 3600
-    while time.time() < t_end and vs.is_connected:
-        time.sleep(30)                            # your meter cadence
-        i_meter_uA = your_meter.measure_current() * 1e6
-        latest = vs.peek_latest_sample(ch)
-        pcb_uA = latest.current if latest else None
-        vs.write_steady_row(ch, time.time(), applied_v, pcb_uA, 0, i_meter_uA)
+    # Wait for the firmware to report OFF (mode == 2) after finishing the sweep.
+    while vs.is_connected:
+        s = vs.peek_latest_sample(ch)
+        if s is not None and s.mode >= 2:
+            break
+        time.sleep(0.1)
+
+    data = vs.get_channel_data(ch)   # full sweep, in order
+    print(f"sweep collected {len(data)} points → {vs.sweep_log_path(ch)}")
 finally:
+    vs.stop_sweep_log(ch)
     vs.send_off(ch)
-    vs.stop_steady_log(ch)
     vs.stop_reading()
     vs.disconnect()
 ```
