@@ -555,10 +555,10 @@ class VoltageSourceApp(App):
 
         # Steady plot link — mirrors the sweep-link pattern. Appears when a
         # STEADY run with a timer + assigned meter finishes and a TXT log was
-        # written. Positioned one row below so it can coexist with the sweep
-        # link (each channel can have shown one of each over its lifetime).
+        # written. Sits on the sweep-link row but under the Stop column so a
+        # channel can carry both links side-by-side.
         steady_link = StyledLabel("📊 View steady plot", f"steady_link_{ch}",
-                                   x + 5, y_base + 300, width=200, height=22,
+                                   x + 160, y_base + 275, width=145, height=22,
                                    color="#007BFF", container=container)
         steady_link.style.update({
             "display": "none",
@@ -570,7 +570,7 @@ class VoltageSourceApp(App):
         self._steady_link_lbls[ch] = steady_link
 
         steady_dot = StyledLabel("●", f"steady_dot_{ch}",
-                                  x + 205, y_base + 300, width=18, height=22,
+                                  x + 305, y_base + 275, width=18, height=22,
                                   color="#007BFF", bold=True,
                                   flex=True, container=container)
         steady_dot.style.update({"display": "none", "font-size": "16px"})
@@ -1002,11 +1002,16 @@ class VoltageSourceApp(App):
         # the CDN script tag.
         import json
         color = _CH_COLORS[ch]
+        # X-axis window = the user-set sweep range (±R). Recovered from the
+        # sweep data itself; the firmware steps up to the requested range so
+        # max(|v|) matches what the user typed on Apply.
+        range_v = max((abs(v) for v in voltages), default=1.0)
         payload = {
             "voltages": voltages,
             "currents": currents,
             "color": color,
             "title": f"Ch {ch} sweep",
+            "range_v": range_v,
         }
         payload_json = json.dumps(payload)
 
@@ -1025,14 +1030,10 @@ class VoltageSourceApp(App):
             "&middot; dbl-click = reset</div>"
             "<script>"
             f"var P={payload_json};"
-            "var xMin=Math.min.apply(null,P.voltages);"
-            "var xMax=Math.max.apply(null,P.voltages);"
-            "var yMin=Math.min.apply(null,P.currents);"
-            "var yMax=Math.max.apply(null,P.currents);"
-            "var xPad=(xMax-xMin)*0.05||0.05;"
-            "var yPad=(yMax-yMin)*0.05||0.05;"
-            "var X0=xMin-xPad,X1=xMax+xPad;"
-            "var Y0=yMin-yPad,Y1=yMax+yPad;"
+            # Initial view: x locked to ±range_v (user's sweep range),
+            # y locked to ±15 uA. Zoom-out clamps back to these extents.
+            "var X0=-P.range_v,X1=P.range_v;"
+            "var Y0=-15,Y1=15;"
             "function draw(){"
             "var el=document.getElementById('plot');"
             "Plotly.newPlot(el,[{"
@@ -1042,7 +1043,7 @@ class VoltageSourceApp(App):
             "title:P.title,margin:{l:70,r:30,t:50,b:60},"
             "xaxis:{title:'Voltage (V)',showgrid:true,zeroline:false,"
             "gridcolor:'#ddd',range:[X0,X1],autorange:false},"
-            "yaxis:{title:'Current (µA)',showgrid:true,zeroline:false,"
+            "yaxis:{title:'Current (\\u00b5A)',showgrid:true,zeroline:false,"
             "gridcolor:'#ddd',range:[Y0,Y1],autorange:false},"
             "dragmode:'zoom',hovermode:'closest'"
             "},{scrollZoom:true,displayModeBar:true,responsive:true,"
@@ -1619,7 +1620,7 @@ class VoltageSourceApp(App):
             _log(f"[Steady plot Ch {ch}] no plottable data in {path}")
             return
         payload = {
-            "title": f"Ch {ch} steady — {os.path.basename(path)}",
+            "title": f"Ch {ch} steady - {os.path.basename(path)}",
             "traces": traces,
         }
         payload_json = json.dumps(payload)
@@ -1642,11 +1643,13 @@ class VoltageSourceApp(App):
             "var xs=[],ys=[];"
             "P.traces.forEach(function(tr){xs=xs.concat(tr.t);ys=ys.concat(tr.y);});"
             "var xMin=Math.min.apply(null,xs),xMax=Math.max.apply(null,xs);"
-            "var yMin=Math.min.apply(null,ys),yMax=Math.max.apply(null,ys);"
+            "var yMax=Math.max.apply(null,ys);"
             "var xPad=(xMax-xMin)*0.05||0.05;"
-            "var yPad=(yMax-yMin)*0.05||0.05;"
             "var X0=xMin-xPad,X1=xMax+xPad;"
-            "var Y0=yMin-yPad,Y1=yMax+yPad;"
+            # Initial y-view: 0 to 2*max(y) so the highest trace sits mid-plot;
+            # user zooms in for stability inspection. Fallback for degenerate
+            # data (all zeros / negatives) so the plot renders.
+            "var Y0=0,Y1=(yMax>0?2*yMax:1);"
             "function draw(){"
             "var el=document.getElementById('plot');"
             "var series=P.traces.map(function(tr){return {"
@@ -1658,7 +1661,7 @@ class VoltageSourceApp(App):
             "title:P.title,margin:{l:70,r:30,t:50,b:60},"
             "xaxis:{title:'Elapsed time (s)',showgrid:true,zeroline:false,"
             "gridcolor:'#ddd',range:[X0,X1],autorange:false},"
-            "yaxis:{title:'Current (µA)',showgrid:true,zeroline:false,"
+            "yaxis:{title:'Current (\\u00b5A)',showgrid:true,zeroline:false,"
             "gridcolor:'#ddd',range:[Y0,Y1],autorange:false},"
             "dragmode:'zoom',hovermode:'closest',"
             "legend:{orientation:'h',x:0,y:1.08}"
