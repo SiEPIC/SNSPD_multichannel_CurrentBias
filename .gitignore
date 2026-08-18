@@ -10,4 +10,4 @@ __pycache__/
 output/
 .venv/
 
-.vscode
+.vscode/
