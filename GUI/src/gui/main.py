@@ -230,6 +230,10 @@ class VoltageSourceApp(App):
         # Sweep plot data per channel: (voltages, currents) — used by the
         # Plotly popup so zoom operates on the data, not a rasterized image.
         self._sweep_plot_data: dict[int, tuple[list[float], list[float]]] = {}
+        # Sweep range (V) as sent on Apply, remembered so the popup's x-axis
+        # spans the user's requested ±R even when the run was stopped early
+        # (max |v| from data would only reflect however far the ramp got).
+        self._sweep_range_vs: dict[int, float] = {}
         # Steady TXT path per channel, remembered so the "View steady plot"
         # link can parse the file when the run ends. Cleared on each Apply.
         self._steady_log_paths: dict[int, str] = {}
@@ -940,6 +944,7 @@ class VoltageSourceApp(App):
             _vs.clear_channel_data(ch)
             self._sweep_active[ch] = False
             self._sweep_plot_data.pop(ch, None)
+            self._sweep_range_vs[ch] = abs(r)
             self._sweep_link_lbls[ch].style["display"] = "none"
             if self._sweep_dot_lbls[ch] is not None:
                 self._sweep_dot_lbls[ch].style["display"] = "none"
@@ -1002,10 +1007,14 @@ class VoltageSourceApp(App):
         # the CDN script tag.
         import json
         color = _CH_COLORS[ch]
-        # X-axis window = the user-set sweep range (±R). Recovered from the
-        # sweep data itself; the firmware steps up to the requested range so
-        # max(|v|) matches what the user typed on Apply.
-        range_v = max((abs(v) for v in voltages), default=1.0)
+        # X-axis window = the user-set sweep range (±R), stashed on Apply. If
+        # the sweep was stopped early, the data only covers a subset of the
+        # requested range but the plot still spans the full ±R the user asked
+        # for. Falls back to max|v| in the data (or 1.0) if we never saw the
+        # Apply — e.g. the value survived a code reload.
+        range_v = self._sweep_range_vs.get(ch)
+        if range_v is None:
+            range_v = max((abs(v) for v in voltages), default=1.0)
         payload = {
             "voltages": voltages,
             "currents": currents,
@@ -1642,10 +1651,12 @@ class VoltageSourceApp(App):
             f"var P={payload_json};"
             "var xs=[],ys=[];"
             "P.traces.forEach(function(tr){xs=xs.concat(tr.t);ys=ys.concat(tr.y);});"
-            "var xMin=Math.min.apply(null,xs),xMax=Math.max.apply(null,xs);"
+            "var xMax=Math.max.apply(null,xs);"
             "var yMax=Math.max.apply(null,ys);"
-            "var xPad=(xMax-xMin)*0.05||0.05;"
-            "var X0=xMin-xPad,X1=xMax+xPad;"
+            # Time-domain plot: x always starts at 0 (elapsed seconds since the
+            # steady run began). 5% right-pad so the last point isn't glued to
+            # the edge.
+            "var X0=0,X1=xMax*1.05||1;"
             # Initial y-view: 0 to 2*max(y) so the highest trace sits mid-plot;
             # user zooms in for stability inspection. Fallback for degenerate
             # data (all zeros / negatives) so the plot renders.
@@ -1660,9 +1671,11 @@ class VoltageSourceApp(App):
             "Plotly.newPlot(el,series,{"
             "title:P.title,margin:{l:70,r:30,t:50,b:60},"
             "xaxis:{title:'Elapsed time (s)',showgrid:true,zeroline:false,"
-            "gridcolor:'#ddd',range:[X0,X1],autorange:false},"
+            "gridcolor:'#ddd',range:[X0,X1],autorange:false,"
+            "rangemode:'nonnegative'},"
             "yaxis:{title:'Current (\\u00b5A)',showgrid:true,zeroline:false,"
-            "gridcolor:'#ddd',range:[Y0,Y1],autorange:false},"
+            "gridcolor:'#ddd',range:[Y0,Y1],autorange:false,"
+            "rangemode:'nonnegative'},"
             "dragmode:'zoom',hovermode:'closest',"
             "legend:{orientation:'h',x:0,y:1.08}"
             "},{scrollZoom:true,displayModeBar:true,responsive:true,"
