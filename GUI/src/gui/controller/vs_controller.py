@@ -756,6 +756,17 @@ class VoltageSourceController:
             buf = self._data_buffers.get(channel_id)
             return buf[-1] if buf else None
 
+    def peek_latest_sample(self, channel_id: int):
+        """Read-only variant: returns the newest sample without touching the
+        new-data flag. Meant for readers other than the idle loop (e.g. the
+        meter poll worker filling the pcb_current_uA column in the steady TXT)
+        so they don't race the idle loop's has_new_data / get_latest_sample
+        handshake.
+        """
+        with self._data_lock:
+            buf = self._data_buffers.get(channel_id)
+            return buf[-1] if buf else None
+
     def get_channel_data(self, channel_id: int) -> list:
         """Return a copy of the data buffer for a channel and clear the new-data flag."""
         with self._data_lock:

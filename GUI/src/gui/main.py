@@ -2,10 +2,6 @@
 
 import atexit
 import base64
-import csv
-import datetime
-import io
-from collections import deque
 import logging
 import os
 import platform
@@ -88,8 +84,6 @@ _CAL_VREF_DEF = "2.5"
 
 _METER_POLL_S = 1.0          # seconds between meter samples (initial default)
 _METER_POLL_MIN_S = 0.05     # safety floor to avoid saturating VISA / meter
-_PCB_LOG_INTERVAL = 0.05     # min seconds between PCB samples pushed to rolling buffer
-_CALIB_RENDER_HZ = 1.0
 
 _METER_OUTPUT_DIR = "output"
 
@@ -224,15 +218,21 @@ class VoltageSourceApp(App):
         self._readout_lbls = [None] * 4        # live current display
         self._sweep_link_lbls = [None] * 4     # "View Plot" link (per channel)
         self._sweep_dot_lbls = [None] * 4      # blue "new sweep" indicator
+        self._steady_link_lbls = [None] * 4    # "View steady plot" link
+        self._steady_dot_lbls = [None] * 4     # blue "new steady run" indicator
         self._apply_btns = [None] * 4
 
         self._selected_modes = ["OFF"] * 4     # what user picked in mode buttons
         self._active_modes = ["OFF"] * 4       # what firmware last reported
         self._applied_voltages = [0.0] * 4
         self._sweep_active = [False] * 4
+        self._steady_active = [False] * 4
         # Sweep plot data per channel: (voltages, currents) — used by the
         # Plotly popup so zoom operates on the data, not a rasterized image.
         self._sweep_plot_data: dict[int, tuple[list[float], list[float]]] = {}
+        # Steady TXT path per channel, remembered so the "View steady plot"
+        # link can parse the file when the run ends. Cleared on each Apply.
+        self._steady_log_paths: dict[int, str] = {}
 
         # Calib tab widgets
         self._cal_r1k_inputs = [None] * 4
@@ -257,25 +257,6 @@ class VoltageSourceApp(App):
         # re-reads self._meter_poll_s[i] each loop so edits take immediate
         # effect without restarting the thread.
         self._meter_poll_s: list[float] = [_METER_POLL_S] * 4
-
-        self._calib_plot_imgs = [None] * 4
-        self._calib_no_data_lbls = [None] * 4
-        self._calib_readout_lbls = [None] * 4
-        self._last_calib_render = [0.0] * 4
-
-        # Rolling buffers (wall-clock time, current µA). Bounded by count so
-        # the calib plot's x-axis grows with the steady session (buffers are
-        # cleared on Apply) instead of sliding in a fixed time window.
-        # maxlens sized for ~1 h of headroom at typical rates (PCB pushed at
-        # 20 Hz → 72 000; meters poll seconds-scale → 2 000 covers many hours).
-        self._pcb_rolling: list[deque] = [
-            deque(maxlen=72000) for _ in range(4)
-        ]
-        self._pcb_last_push = [0.0] * 4
-        self._meter_samples: list[deque] = [
-            deque(maxlen=2000) for _ in range(4)
-        ]
-        self._meter_samples_lock = threading.Lock()
 
         # Cached list of visible VISA resources — refreshed only when the
         # meter count changes or the user hits ↻, so onchange doesn't
@@ -572,6 +553,29 @@ class VoltageSourceApp(App):
         sweep_dot.style.update({"display": "none", "font-size": "16px"})
         self._sweep_dot_lbls[ch] = sweep_dot
 
+        # Steady plot link — mirrors the sweep-link pattern. Appears when a
+        # STEADY run with a timer + assigned meter finishes and a TXT log was
+        # written. Positioned one row below so it can coexist with the sweep
+        # link (each channel can have shown one of each over its lifetime).
+        steady_link = StyledLabel("📊 View steady plot", f"steady_link_{ch}",
+                                   x + 5, y_base + 300, width=200, height=22,
+                                   color="#007BFF", container=container)
+        steady_link.style.update({
+            "display": "none",
+            "cursor": "pointer",
+            "text-decoration": "underline",
+            "font-size": "13px",
+        })
+        steady_link.onclick.do(lambda em, ch=ch: self._on_steady_link_click(ch))
+        self._steady_link_lbls[ch] = steady_link
+
+        steady_dot = StyledLabel("●", f"steady_dot_{ch}",
+                                  x + 205, y_base + 300, width=18, height=22,
+                                  color="#007BFF", bold=True,
+                                  flex=True, container=container)
+        steady_dot.style.update({"display": "none", "font-size": "16px"})
+        self._steady_dot_lbls[ch] = steady_dot
+
     # =======================================================================
     # Calib tab
     # =======================================================================
@@ -630,27 +634,12 @@ class VoltageSourceApp(App):
         })
         container.append(self._calib_log_text, "calib_log_text")
 
-        # ---- Comparison plots (middle) ----
-        # Extra top gap separates plots from the meter/log section above.
-        plot_y0 = 200
-        plot_col_x = [5, 720]
-        plot_row_h = 225
-        # Larger inter-row gap so the row-1 "Ch 2"/"Ch 3" labels don't
-        # collide with the new live-readout labels sitting below row 0's
-        # plot boxes.
-        plot_row_gap = 78
-        plot_row_y = [plot_y0, plot_y0 + plot_row_h + plot_row_gap]
-        plot_w, plot_h = 700, plot_row_h
-
-        for ch in range(4):
-            col = ch % 2
-            row = ch // 2
-            self._build_calib_plot(container, ch,
-                                   plot_col_x[col], plot_row_y[row],
-                                   plot_w, plot_h)
-
-        # ---- Factory calibration table (bottom, left-aligned) ----
-        cal_y0 = plot_row_y[1] + plot_h + 55
+        # ---- Factory calibration table (below the meter/log section) ----
+        # The old "Comparison plots" section (per-channel matplotlib images
+        # regenerated at 1 Hz) was removed: it caused CPU/memory creep on the
+        # Pi and duplicated data already in the steady TXT log. Post-run
+        # inspection is now via the "View steady plot" link in the Ctrl tab.
+        cal_y0 = 260
         col_ch_x, col_r1k_x, col_rgain_x, col_vref_x, col_btn_x = 20, 110, 260, 410, 570
         inp_w = 130
 
@@ -787,58 +776,6 @@ class VoltageSourceApp(App):
             if w is not None:
                 w.style["display"] = "none"
 
-    def _build_calib_plot(self, container, ch: int, x: int, y: int, w: int, h: int):
-        StyledLabel(f"Ch {ch}", f"cplot_lbl_{ch}", x + 5, y, width=100, height=22,
-                    color="#000", bold=True, container=container)
-        plot_c = StyledContainer(f"cplot_c_{ch}", x, y + 26, w, h,
-                                 border=False, bg_color=False, container=container)
-        # Aggressively kill anything the framework's default stylesheet may
-        # add around the container/image — empty plots must render as blank
-        # space, not a gray outlined box.
-        for k, v in (("border", "0"), ("border-style", "none"),
-                      ("outline", "none"), ("box-shadow", "none"),
-                      ("background", "transparent")):
-            plot_c.style[k] = v
-
-        img = gui.Image("")
-        img.css_position = "absolute"
-        img.css_left = "0px"
-        img.css_top = "0px"
-        img.css_width = f"{w - 5}px"
-        img.css_height = f"{h - 5}px"
-        for k, v in (("border", "0"), ("border-style", "none"),
-                      ("outline", "none"), ("background", "transparent"),
-                      # Hide until a real image is set — an empty <img src="">
-                      # renders as a placeholder box in Chromium.
-                      ("display", "none")):
-            img.style[k] = v
-        plot_c.append(img, f"cplot_img_{ch}")
-        self._calib_plot_imgs[ch] = img
-
-        # Center the "no data" message vertically inside the plot area so
-        # the empty state looks intentional instead of like a broken image.
-        no_data = StyledLabel("No comparison data yet", f"cplot_nd_{ch}",
-                              x + 5, y + 26 + (h // 2 - 11),
-                              width=w - 10, height=22,
-                              color="#aaa", flex=True,
-                              container=container)
-        self._calib_no_data_lbls[ch] = no_data
-
-        # Live readout: PCB µA + each connected meter's µA for this channel.
-        # Updated on every idle tick alongside the plot render.
-        readout = StyledLabel("—", f"cplot_ro_{ch}",
-                              x + 5, y + 26 + h + 6,
-                              width=w - 10, height=22,
-                              color="#333", flex=True,
-                              justify_content="flex-start",
-                              container=container)
-        readout.style.update({
-            "font-family": "monospace",
-            "font-size": "13px",
-            "font-weight": "bold",
-        })
-        self._calib_readout_lbls[ch] = readout
-
     # =======================================================================
     # Event handlers — Ctrl tab
     # =======================================================================
@@ -966,12 +903,15 @@ class VoltageSourceApp(App):
             _vs.send_steady(ch, v, dur, time_unit)
             _log(f"[Apply Ch {ch}] {ch},STEADY,{v},{dur},{time_unit}")
             self._applied_voltages[ch] = v
-            # Reset calib session for this channel so plot restarts fresh
-            self._pcb_rolling[ch].clear()
-            with self._meter_samples_lock:
-                for idx in range(4):
-                    if self._meter_channel[idx] == ch:
-                        self._meter_samples[idx].clear()
+            # Fresh run — hide any prior "View steady plot" link and drop the
+            # cached TXT path so the new run's link only appears once its own
+            # log has been written.
+            self._steady_log_paths.pop(ch, None)
+            if self._steady_link_lbls[ch] is not None:
+                self._steady_link_lbls[ch].style["display"] = "none"
+            if self._steady_dot_lbls[ch] is not None:
+                self._steady_dot_lbls[ch].style["display"] = "none"
+            self._steady_active[ch] = False
 
             # Steady TXT log only when a timer is set AND at least one
             # connected meter is assigned to this channel.
@@ -982,6 +922,7 @@ class VoltageSourceApp(App):
                 dur_s = self._timer_duration_seconds(ch)
                 path = _vs.start_steady_log(ch, v, dur_s, assigned_meters)
                 if path:
+                    self._steady_log_paths[ch] = path
                     _log(f"[Apply Ch {ch}] Steady TXT → {path}")
             self._set_active_mode(ch, "STEADY")
             return
@@ -1330,8 +1271,6 @@ class VoltageSourceApp(App):
             except Exception:
                 pass
         _meters[idx] = None
-        with self._meter_samples_lock:
-            self._meter_samples[idx].clear()
         _log(f"[Meter {idx}] Disconnected", calib=True)
 
     def _on_meter_channel_change(self, idx: int, val):
@@ -1353,32 +1292,13 @@ class VoltageSourceApp(App):
                 inp.set_value(f"{v:g}")
         self._meter_poll_s[idx] = v
 
-    def _latest_pcb_current(self, ch: int) -> float | None:
-        """Most recent PCB current sample for a channel (µA), or None."""
-        buf = self._pcb_rolling[ch]
-        if not buf:
-            return None
-        return buf[-1][1]
-
-    def _update_calib_readout(self, ch: int):
-        """Refresh the per-channel PCB+meter live readout under the plot."""
-        lbl = self._calib_readout_lbls[ch]
-        if lbl is None:
-            return
-        parts: list[str] = []
-        pcb = self._latest_pcb_current(ch)
-        if pcb is not None:
-            parts.append(f"PCB: {pcb:.4f} µA")
-        with self._meter_samples_lock:
-            for idx in range(self._meter_count):
-                if self._meter_channel[idx] != ch:
-                    continue
-                if not _meter_connected(idx):
-                    continue
-                buf = self._meter_samples[idx]
-                if buf:
-                    parts.append(f"Meter {idx}: {buf[-1][1]:.4f} µA")
-        lbl.set_text("   |   ".join(parts) if parts else "—")
+    def _latest_pcb_current_uA(self, ch: int) -> float | None:
+        """Most recent PCB current sample for a channel (µA), read directly
+        from the vs_controller ring buffer. Returns None if no firmware
+        sample has arrived for this channel yet.
+        """
+        s = _vs.peek_latest_sample(ch)
+        return s.current if s is not None else None
 
     # =======================================================================
     # Meter poller (one thread per connected meter)
@@ -1389,28 +1309,27 @@ class VoltageSourceApp(App):
             if m is None or not m.is_connected:
                 break
             interval = max(_METER_POLL_MIN_S, self._meter_poll_s[idx])
-            # Only sample when the assigned channel is actively in STEADY —
-            # otherwise the plot fills up with meter-only data. Use a short
-            # poll while idle so a long `interval` (e.g. 10 min) doesn't
-            # delay the first STEADY sample by up to a full interval after
-            # the user hits Apply.
+            # Only sample when the assigned channel is actively in STEADY.
+            # Poll cheaply while idle so a long `interval` (e.g. 10 min)
+            # doesn't delay the first STEADY sample by up to a full interval
+            # after the user hits Apply.
             ch = self._meter_channel[idx]
             if self._active_modes[ch] != "STEADY":
                 if stop.wait(min(interval, 0.2)):
                     return
                 continue
             # Apply sets _active_modes optimistically before the firmware has
-            # streamed its first STEADY sample back, so on the very first poll
-            # _pcb_rolling can still be empty (→ blank pcb_current_uA in the
-            # TXT). Wait a short window for the first PCB sample so both
-            # columns are populated on the t=0 row.
-            if self._latest_pcb_current(ch) is None:
+            # streamed its first STEADY sample back, so on the very first
+            # poll the PCB ring can still be empty (→ blank pcb_current_uA
+            # in the TXT). Wait a short window for the first PCB sample so
+            # both columns are populated on the t=0 row.
+            if self._latest_pcb_current_uA(ch) is None:
                 for _ in range(20):  # up to ~1.0 s
                     if stop.wait(0.05):
                         return
                     if self._active_modes[ch] != "STEADY":
                         break
-                    if self._latest_pcb_current(ch) is not None:
+                    if self._latest_pcb_current_uA(ch) is not None:
                         break
             try:
                 i_A = m.measure_current()
@@ -1421,12 +1340,10 @@ class VoltageSourceApp(App):
                 continue
             t = time.time()
             i_uA = i_A * 1e6
-            with self._meter_samples_lock:
-                self._meter_samples[idx].append((t, i_uA))
             # Steady TXT log: one row per meter poll, with a dedicated
             # column for THIS meter and the latest PCB reading for reference.
             _vs.write_steady_row(ch, t, self._applied_voltages[ch],
-                                 self._latest_pcb_current(ch), idx, i_uA)
+                                 self._latest_pcb_current_uA(ch), idx, i_uA)
             if stop.wait(interval):
                 return
 
@@ -1503,7 +1420,6 @@ class VoltageSourceApp(App):
             self._meter_was_connected[idx] = state
 
         # Per-channel data
-        now = time.time()
         for ch in range(4):
             if _vs.has_new_data(ch):
                 latest = _vs.get_latest_sample(ch)
@@ -1525,17 +1441,12 @@ class VoltageSourceApp(App):
 
                     readout = self._readout_lbls[ch]
                     if fw == "STEADY":
+                        self._steady_active[ch] = True
                         if readout is not None:
                             readout.style["display"] = "block"
                             readout.set_text(
                                 f"Set: {self._applied_voltages[ch]:.3f} V   |   "
                                 f"Measured: {latest.current:.5f} µA")
-                        # Push to PCB rolling buffer (throttled). deque(maxlen=…)
-                        # caps growth so no manual trim is needed; the calib plot
-                        # window extends across the whole steady session.
-                        if now - self._pcb_last_push[ch] >= _PCB_LOG_INTERVAL:
-                            self._pcb_rolling[ch].append((now, latest.current))
-                            self._pcb_last_push[ch] = now
                     elif fw == "SWEEP":
                         self._sweep_active[ch] = True
                         if readout is not None:
@@ -1549,15 +1460,14 @@ class VoltageSourceApp(App):
                             # Only pay the O(N) buffer copy here, once per sweep.
                             self._render_sweep_plot(ch, _vs.get_channel_data(ch))
                             self._sweep_active[ch] = False
+                        if self._steady_active[ch]:
+                            # Steady run just ended (timer expired or user Stop
+                            # → firmware sent OFF). Expose the "View steady
+                            # plot" link if a TXT log was written.
+                            self._on_steady_done(ch)
+                            self._steady_active[ch] = False
                         if readout is not None:
                             readout.style["display"] = "none"
-
-            # Throttled calib plot render
-            if now - self._last_calib_render[ch] >= 1.0 / _CALIB_RENDER_HZ:
-                self._render_calib_plot(ch)
-                self._last_calib_render[ch] = now
-            # Live readout under the plot — cheap, refresh every tick.
-            self._update_calib_readout(ch)
 
         # Log terminal
         if _log_seq != self._last_log_seq and self._log_text is not None:
@@ -1596,96 +1506,200 @@ class VoltageSourceApp(App):
         if dot is not None:
             dot.style["display"] = "inline-block"
 
-    def _render_calib_plot(self, ch: int):
-        pcb = list(self._pcb_rolling[ch])
-        meter_datasets = []
-        with self._meter_samples_lock:
-            for idx in range(self._meter_count):
-                if self._meter_channel[idx] == ch and _meter_connected(idx):
-                    meter_datasets.append((idx, list(self._meter_samples[idx])))
-
-        if not pcb and not meter_datasets:
-            if self._calib_no_data_lbls[ch] is not None:
-                self._calib_no_data_lbls[ch].style["display"] = "block"
-            if self._calib_plot_imgs[ch] is not None:
-                self._calib_plot_imgs[ch].set_image("")
-                self._calib_plot_imgs[ch].style["display"] = "none"
+    def _on_steady_done(self, ch: int):
+        """STEADY → OFF transition. If a TXT log was opened for this run and
+        contains rows, expose the 'View steady plot' link + 'new run' dot."""
+        path = self._steady_log_paths.get(ch)
+        if not path or not os.path.isfile(path):
             return
-
+        # Cheap sanity check: at least one data row (header block starts with
+        # "#" and the CSV header row starts with "time_s").
         try:
-            from matplotlib.figure import Figure
-            from matplotlib.backends.backend_agg import FigureCanvasAgg
-            from matplotlib.ticker import AutoMinorLocator, MultipleLocator
+            with open(path) as f:
+                has_data = False
+                for line in f:
+                    if line.startswith("#") or line.startswith("time_s"):
+                        continue
+                    if line.strip():
+                        has_data = True
+                        break
+            if not has_data:
+                return
+        except Exception:
+            return
+        link = self._steady_link_lbls[ch]
+        if link is not None:
+            link.style["display"] = "block"
+        dot = self._steady_dot_lbls[ch]
+        if dot is not None:
+            dot.style["display"] = "inline-block"
+
+    def _read_steady_log(self, path: str):
+        """Parse a steady TXT log into per-series lists ready for Plotly.
+
+        Returns (times, pcb, meters_dict) where:
+          - times: list[float] of elapsed seconds (one entry per row)
+          - pcb: list[(t, uA)] where uA is present
+          - meters_dict: {meter_idx: [(t, uA), ...]}
+        """
+        pcb_series: list[tuple[float, float]] = []
+        meters: dict[int, list[tuple[float, float]]] = {}
+        times: list[float] = []
+        meter_cols: dict[int, int] = {}   # column_index -> meter_idx
+        header_seen = False
+        with open(path) as f:
+            for line in f:
+                line = line.rstrip("\n")
+                if not line or line.startswith("#"):
+                    continue
+                parts = line.split("\t")
+                if not header_seen:
+                    header_seen = True
+                    for i, h in enumerate(parts):
+                        if h.startswith("meter") and h.endswith("_current_uA"):
+                            try:
+                                m_idx = int(h[len("meter"):-len("_current_uA")])
+                            except ValueError:
+                                continue
+                            meter_cols[i] = m_idx
+                            meters[m_idx] = []
+                    continue
+                try:
+                    t = float(parts[0])
+                except (ValueError, IndexError):
+                    continue
+                times.append(t)
+                if len(parts) >= 3 and parts[2].strip():
+                    try:
+                        pcb_series.append((t, float(parts[2])))
+                    except ValueError:
+                        pass
+                for col_i, m_idx in meter_cols.items():
+                    if col_i < len(parts) and parts[col_i].strip():
+                        try:
+                            meters[m_idx].append((t, float(parts[col_i])))
+                        except ValueError:
+                            pass
+        return times, pcb_series, meters
+
+    def _on_steady_link_click(self, ch: int):
+        path = self._steady_log_paths.get(ch)
+        if not path or not os.path.isfile(path):
+            return
+        # Clear the "new run" indicator now that the user has opened it.
+        dot = self._steady_dot_lbls[ch]
+        if dot is not None:
+            dot.style["display"] = "none"
+        try:
+            _times, pcb, meters = self._read_steady_log(path)
         except Exception as e:
-            _log(f"[Calib plot Ch {ch}] matplotlib import failed: {e}")
+            _log(f"[Steady plot Ch {ch}] parse failed: {e}")
             return
 
-        # Shared t0 = earliest sample across all series
-        all_times = [t for t, _ in pcb]
-        all_ys: list[float] = []
-        for _, ds in meter_datasets:
-            all_times.extend(t for t, _ in ds)
-            all_ys.extend(y for _, y in ds)
-        all_ys.extend(y for _, y in pcb)
-        if not all_times:
-            return
-        t0 = min(all_times)
-
-        fig = Figure(figsize=(7.0, 2.8), dpi=100)
-        canvas = FigureCanvasAgg(fig)
-        ax = fig.add_subplot(111)
+        import json
+        traces = []
         if pcb:
-            xs = [t - t0 for t, _ in pcb]
-            ys = [i for _, i in pcb]
-            ax.plot(xs, ys, color=_CH_COLORS[ch], linewidth=1.2, label="PCB")
-        for idx, ds in meter_datasets:
-            if not ds:
+            traces.append({
+                "name": "PCB",
+                "color": _CH_COLORS[ch],
+                "t": [t for t, _ in pcb],
+                "y": [y for _, y in pcb],
+            })
+        for m_idx in sorted(meters):
+            series = meters[m_idx]
+            if not series:
                 continue
-            xs = [t - t0 for t, _ in ds]
-            ys = [i for _, i in ds]
-            ax.plot(xs, ys, color=_METER_COLORS[idx % 4], linewidth=1.0,
-                    label=f"Meter {idx}")
-        ax.set_xlabel("Time (s)")
-        ax.set_ylabel("Current (µA)")
+            traces.append({
+                "name": f"Meter {m_idx}",
+                "color": _METER_COLORS[m_idx % 4],
+                "t": [t for t, _ in series],
+                "y": [y for _, y in series],
+            })
+        if not traces:
+            _log(f"[Steady plot Ch {ch}] no plottable data in {path}")
+            return
+        payload = {
+            "title": f"Ch {ch} steady — {os.path.basename(path)}",
+            "traces": traces,
+        }
+        payload_json = json.dumps(payload)
 
-        # Adaptive y-limits + grid density. A fixed 0.1 µA locator was
-        # producing hundreds of ticks whenever data spanned more than a few
-        # µA — matplotlib then dropped tick labels and the grid entirely.
-        # Instead we pick the finest step whose tick count stays readable.
-        if all_ys:
-            ymin, ymax = min(all_ys), max(all_ys)
-            span = max(ymax - ymin, 0.5)  # enforce a visible baseline span
-            pad = span * 0.15
-            y_lo, y_hi = ymin - pad, ymax + pad
-            ax.set_ylim(y_lo, y_hi)
-            view = y_hi - y_lo
-            if view < 1.5:
-                major = 0.1
-            elif view < 6:
-                major = 0.5
-            elif view < 30:
-                major = 1.0
-            elif view < 150:
-                major = 5.0
-            else:
-                major = None
-            if major is not None:
-                ax.yaxis.set_major_locator(MultipleLocator(major))
-                ax.yaxis.set_minor_locator(MultipleLocator(major / 5))
-        ax.xaxis.set_minor_locator(AutoMinorLocator())
-        ax.grid(True, which="major", linestyle=":", alpha=0.6)
-        ax.grid(True, which="minor", axis="y", linestyle=":", alpha=0.25)
-        ax.legend(fontsize=8, loc="best")
-        fig.tight_layout()
-
-        buf = io.BytesIO()
-        canvas.print_png(buf)
-        b64 = base64.b64encode(buf.getvalue()).decode("ascii")
-        if self._calib_plot_imgs[ch] is not None:
-            self._calib_plot_imgs[ch].set_image(f"data:image/png;base64,{b64}")
-            self._calib_plot_imgs[ch].style["display"] = "block"
-        if self._calib_no_data_lbls[ch] is not None:
-            self._calib_no_data_lbls[ch].style["display"] = "none"
+        html = (
+            "<!doctype html><html><head><meta charset='utf-8'>"
+            f"<title>Ch {ch} Steady</title>"
+            "<script src='https://cdn.plot.ly/plotly-2.27.0.min.js'></script>"
+            "<style>html,body{margin:0;height:100%;background:#fff;font-family:sans-serif;}"
+            "#plot{width:100vw;height:100vh;}"
+            "#hint{position:fixed;left:8px;bottom:8px;padding:4px 8px;"
+            "background:rgba(0,0,0,0.55);color:#fff;font-size:12px;"
+            "border-radius:4px;pointer-events:none;}"
+            "</style></head><body>"
+            "<div id='plot'></div>"
+            "<div id='hint'>wheel = zoom into cursor &middot; drag = box zoom "
+            "&middot; dbl-click = reset</div>"
+            "<script>"
+            f"var P={payload_json};"
+            "var xs=[],ys=[];"
+            "P.traces.forEach(function(tr){xs=xs.concat(tr.t);ys=ys.concat(tr.y);});"
+            "var xMin=Math.min.apply(null,xs),xMax=Math.max.apply(null,xs);"
+            "var yMin=Math.min.apply(null,ys),yMax=Math.max.apply(null,ys);"
+            "var xPad=(xMax-xMin)*0.05||0.05;"
+            "var yPad=(yMax-yMin)*0.05||0.05;"
+            "var X0=xMin-xPad,X1=xMax+xPad;"
+            "var Y0=yMin-yPad,Y1=yMax+yPad;"
+            "function draw(){"
+            "var el=document.getElementById('plot');"
+            "var series=P.traces.map(function(tr){return {"
+            "x:tr.t,y:tr.y,type:'scattergl',mode:'lines+markers',"
+            "line:{color:tr.color,width:1.5},"
+            "marker:{color:tr.color,size:5},"
+            "name:tr.name};});"
+            "Plotly.newPlot(el,series,{"
+            "title:P.title,margin:{l:70,r:30,t:50,b:60},"
+            "xaxis:{title:'Elapsed time (s)',showgrid:true,zeroline:false,"
+            "gridcolor:'#ddd',range:[X0,X1],autorange:false},"
+            "yaxis:{title:'Current (µA)',showgrid:true,zeroline:false,"
+            "gridcolor:'#ddd',range:[Y0,Y1],autorange:false},"
+            "dragmode:'zoom',hovermode:'closest',"
+            "legend:{orientation:'h',x:0,y:1.08}"
+            "},{scrollZoom:true,displayModeBar:true,responsive:true,"
+            "displaylogo:false});"
+            "var clamping=false;"
+            "el.on('plotly_relayout',function(ed){"
+            "if(clamping)return;"
+            "var xr=el.layout.xaxis.range,yr=el.layout.yaxis.range;"
+            "var upd={},dirty=false;"
+            "if(xr[0]<X0-1e-9){upd['xaxis.range[0]']=X0;dirty=true;}"
+            "if(xr[1]>X1+1e-9){upd['xaxis.range[1]']=X1;dirty=true;}"
+            "if(yr[0]<Y0-1e-9){upd['yaxis.range[0]']=Y0;dirty=true;}"
+            "if(yr[1]>Y1+1e-9){upd['yaxis.range[1]']=Y1;dirty=true;}"
+            "if(ed['xaxis.autorange']===true||ed['yaxis.autorange']===true){"
+            "upd['xaxis.range']=[X0,X1];upd['yaxis.range']=[Y0,Y1];"
+            "upd['xaxis.autorange']=false;upd['yaxis.autorange']=false;"
+            "dirty=true;}"
+            "if(dirty){clamping=true;"
+            "Plotly.relayout(el,upd).then(function(){clamping=false;});}"
+            "});"
+            "}"
+            "if(window.Plotly){draw();}else{"
+            "var poll=setInterval(function(){if(window.Plotly){"
+            "clearInterval(poll);draw();}},50);}"
+            "window.addEventListener('resize',function(){"
+            "if(window.Plotly)Plotly.Plots.resize(document.getElementById('plot'));"
+            "});"
+            "</script></body></html>"
+        )
+        html_b64 = base64.b64encode(html.encode("utf-8")).decode("ascii")
+        js = (
+            "var w=window.open('','_blank',"
+            "'width=1000,height=650,menubar=no,toolbar=no,location=no,status=no');"
+            "if(w){"
+            "w.document.open();"
+            "w.document.write(atob('" + html_b64 + "'));"
+            "w.document.close();"
+            "}"
+        )
+        self.execute_javascript(js)
 
 
 # ===========================================================================
