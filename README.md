@@ -4,7 +4,7 @@
 
 SMU is used for SNSPD to:
 
- - Determine switching current (Typically around 3μA ) by hysteresis V-I sweep measurement
+ - Determine switching current (Typically around 3μA) by hysteresis V-I sweep measurement
  - Source steady biasing current to the nano-wire
 
 However, the commercial SMU are typically single channel, and large sweep range is unnecessary for SNSPD.
@@ -16,7 +16,7 @@ This PCB provides necessary features for SNSPD biasing with 4 channels at around
 - 4 channels independently controlled from Python Remi GUI
 - 10nA measurement precision
 - Hysteresis V-I sweep with controllable range (maximum ± 1.0 V) and step size
-    - With 100 k Ω resistor down steam, current will be around 10μA at 1.0 V
+    - With 100kΩ resistor down steam, current will be around 10μA at 1.0 V
     - Measurements plotted on GUI and also recorded as an txt file
 - Steady biasing current sourcing at set voltage
 - Per-channel current sense calibration
