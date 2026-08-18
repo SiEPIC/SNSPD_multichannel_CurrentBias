@@ -9,3 +9,5 @@ __pycache__/
 *.pyc
 output/
 .venv/
+
+.vscode
